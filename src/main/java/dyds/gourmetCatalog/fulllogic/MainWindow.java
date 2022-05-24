@@ -31,7 +31,11 @@ public class MainWindow {
   String selectedResultTitle = null; //For storage purposes, se below that it may not coincide with the searched term
   String text = ""; //Last searched text! this variable is central for everything
 
+
   public MainWindow() {
+
+    // Esto tiene que iniciar la vista y unirla a el/los presentador/es
+
 
     Retrofit retrofit = new Retrofit.Builder()
         .baseUrl("https://en.wikipedia.org/w/")
@@ -49,9 +53,11 @@ public class MainWindow {
     // this is needed to open a link in the browser
 
     textField1.addActionListener(e -> new Thread(() -> {
+              //todo a partir de aca le aviso al presentador para que el modelo haga todo esto
               //This may take some time, dear user be patient in the meanwhile!
               setWorkingStatus();
               // get from service
+
               Response<String> callForSearchResponse;
               try {
 

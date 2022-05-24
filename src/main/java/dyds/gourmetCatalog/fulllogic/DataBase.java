@@ -29,7 +29,7 @@ public class DataBase {
     }
   }
 
-  public static void testDB()
+/*  public static void testDB()
   {
 
     Connection connection = null;
@@ -74,7 +74,7 @@ public class DataBase {
         System.err.println(e);
       }
     }
-  }
+  }*/
 
   public static ArrayList<String> getTitles()
   {

@@ -1,0 +1,151 @@
+package model;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import dyds.gourmetCatalog.fulllogic.SearchResult;
+import dyds.gourmetCatalog.fulllogic.WikipediaPageAPI;
+import dyds.gourmetCatalog.fulllogic.WikipediaSearchAPI;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
+
+import javax.swing.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+public class CatalogModelImpl implements CatalogModel {
+
+    //todo estas 2 variables estan re rancias, hay que ver como volarlas
+    String selectedResultTitle = null;
+    String lastSearchedText = "";
+
+    private ArrayList<CatalogModelListener> listeners = new ArrayList<>();
+
+    public void SearchOnWiki(Response<String> callForSearchResponse){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://en.wikipedia.org/w/")
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
+
+        //todo ver que onda con esta cosa
+        WikipediaSearchAPI searchAPI = retrofit.create(WikipediaSearchAPI.class);
+        WikipediaPageAPI pageAPI = retrofit.create(WikipediaPageAPI.class);
+
+        //Response<String> callForSearchResponse;
+        //try {
+
+            //First, lets search for the term in Wikipedia
+            //callForSearchResponse = searchAPI.searchForTerm(textField1.getText() + " articletopic:\"food-and-drink\"").execute();
+
+            System.out.println("JSON " + callForSearchResponse.body());
+
+            Gson gson = new Gson();
+            JsonObject jobj = gson.fromJson(callForSearchResponse.body(), JsonObject.class);
+            JsonObject query = jobj.get("query").getAsJsonObject();
+            Iterator<JsonElement> resultIterator = query.get("search").getAsJsonArray().iterator();
+            JsonArray jsonResults = query.get("search").getAsJsonArray();
+
+            JPopupMenu searchOptionsMenu = new JPopupMenu("Search Results");
+            for (JsonElement je : jsonResults) {
+                JsonObject searchResult = je.getAsJsonObject();
+                String searchResultTitle = searchResult.get("title").getAsString();
+                String searchResultPageId = searchResult.get("pageid").getAsString();
+                String searchResultSnippet = searchResult.get("snippet").getAsString();
+
+                SearchResult sr = new SearchResult(searchResultTitle, searchResultPageId, searchResultSnippet);
+                searchOptionsMenu.add(sr);
+                sr.addActionListener(actionEvent -> {
+                    try {
+                        //This may take some time, dear user be patient in the meanwhile!
+                        //setWorkingStatus();
+                        Response<String> callForPageResponse = pageAPI.getExtractByPageID(sr.pageID).execute();
+
+                        System.out.println("JSON " + callForPageResponse.body());
+                        JsonObject jobj2 = gson.fromJson(callForPageResponse.body(), JsonObject.class);
+                        JsonObject query2 = jobj2.get("query").getAsJsonObject();
+                        JsonObject pages = query2.get("pages").getAsJsonObject();
+                        Set<Map.Entry<String, JsonElement>> pagesSet = pages.entrySet();
+                        Map.Entry<String, JsonElement> first = pagesSet.iterator().next();
+                        JsonObject page = first.getValue().getAsJsonObject();
+                        JsonElement searchResultExtract2 = page.get("extract");
+                        if (searchResultExtract2 == null) {
+                            lastSearchedText = "No Results";
+                        } else {
+                            lastSearchedText = "<h1>" + sr.title + "</h1>";
+                            selectedResultTitle = sr.title;
+                            lastSearchedText += searchResultExtract2.getAsString().replace("\\n", "\n");
+                            lastSearchedText = textToHtml(lastSearchedText);
+
+                            //Not yet...
+                            //text+="\n" + "<a href=https://en.wikipedia.org/?curid=" + searchResultPageId +">View Full Article</a>";
+                        }
+                        //todo aca le tiene que decir al presentador que ya cambio los datos, asi actualiza los campos de la vista
+                        notifySearchListener();
+                        /*textPane1.setText(lastSearchedText);
+                        textPane1.setCaretPosition(0);*/
+                        //Back to edit time!
+                        //setWatingStatus();
+                    } catch (Exception e12) {
+                        System.out.println(e12.getMessage());
+                    }
+                });
+            }
+            //searchOptionsMenu.show(textField1, textField1.getX(), textField1.getY());
+        //} catch (IOException e1) { Esta parte eran las excepciones de IO, que el modelo no tiene nada que ver
+        //    e1.printStackTrace();
+        //}
+    }
+
+    public static String textToHtml(String text) {
+
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("<font face=\"arial\">");
+
+        String fixedText = text
+                .replace("'", "`"); //Replace to avoid SQL errors, we will have to find a workaround..
+
+        builder.append(fixedText);
+
+        builder.append("</font>");
+
+        return builder.toString();
+    }
+
+    public void addListener(CatalogModelListener listener){
+        this.listeners.add(listener);
+    }
+
+
+    private void notifySearchListener(){
+        for(CatalogModelListener listener: listeners){
+            listener.didSearchOnWiki();
+        }
+    }
+    private void notifySelectSearchListener(){
+        for(CatalogModelListener listener: listeners){
+            listener.didSelectSearchOption();
+        }
+    }
+    private void notifySaveListener(){
+        for(CatalogModelListener listener: listeners){
+            listener.didSaveLocally();
+        }
+    }
+    private void notifySelectSaveListener(){
+        for(CatalogModelListener listener: listeners){
+            listener.didSelectSavedSearch();
+        }
+    }
+    private void notifyDeleteListener(){
+        for(CatalogModelListener listener: listeners){
+            listener.didDeleteSave();
+        }
+    }
+}
