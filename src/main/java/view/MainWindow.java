@@ -5,11 +5,16 @@ public interface MainWindow {
 
     void getSearchBarText();//Va al textField1 cambiar void
 
-    void setSearchedContent();//Va al textPane1
+    void setSearchedContent(String text);//Va al textPane1
 
-    void setStoredContent();//va al textPane2
+    String getSearchedContent();
 
-    void setStoredList();//va al comboBox
+    void setStoredContent(String text);//va al textPane2
 
+    void setStoredList(String[] storedArticles);//va al comboBox
+
+    String getSavesSelection();//retorna lo seleccionado por el combobox pasado a string
+
+    String getDisplayedArticle();
 
 }

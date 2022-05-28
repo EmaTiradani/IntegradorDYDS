@@ -8,4 +8,13 @@ public interface CatalogPresenter {
 
     void onEventSearch();
 
+    void onEventShowSaved();
+
+    void onEventDeleteArticle();
+
+    void onEventSaveChanges();
+
+    void onEventSaveArticle();
+
+
 }

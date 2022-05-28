@@ -10,5 +10,6 @@ public interface CatalogModelListener {
 
     void didSelectSavedSearch();//cuando elegis algo del combobox
 
-    void didDeleteSave(); //todo esto para cuando le agregue la funcionalidad de eliminar una save
+    void didDeleteSave();
+
 }
