@@ -11,4 +11,6 @@ public interface CatalogModel {
     boolean saveArticleChanges(String title, String body);
 
     boolean saveArticle(String title, String body);
+
+    boolean deleteArticle(String title);
 }

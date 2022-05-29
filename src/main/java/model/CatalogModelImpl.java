@@ -23,6 +23,7 @@ public class CatalogModelImpl implements CatalogModel {
     //todo estas 2 variables estan re rancias, hay que ver como volarlas
     String selectedResultTitle = null;
     String lastSearchedText = "";
+    String lastDeletedTitle = "";
     private DataBase dataBase;
 
     private ArrayList<CatalogModelListener> listeners = new ArrayList<>();
@@ -42,6 +43,23 @@ public class CatalogModelImpl implements CatalogModel {
         //DataBase.saveInfo(comboBox1.getSelectedItem().toString().replace("'", "`"), textPane2.getText());  //Dont forget the ' sql problem
         DataBase.saveInfo(title.replace("'", "`"), body);//Todo hacer que lo de comillas lo haga la database
         return true; //Que retorne falso si la database no lo pudo meter o algo asi.
+    }
+
+    @Override
+    public boolean saveArticle(String title, String body) {
+        /*if(text != ""){
+            // save to DB  <o/
+            dyds.gourmetCatalog.fulllogic.  //Dont forget the ' sql problem
+            comboBox1.setModel(new DefaultComboBoxModel<Object>(dyds.gourmetCatalog.fulllogic.DataBase.getTitles().stream().sorted().toArray()));*/
+        dyds.gourmetCatalog.fulllogic.DataBase.saveInfo(title.replace("'", "`"), body);
+        notifySaveListener();
+        return true;
+    }
+
+    @Override
+    public boolean deleteArticle(String title) {
+
+        return true;
     }
 
 

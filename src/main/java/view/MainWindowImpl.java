@@ -21,6 +21,7 @@ public class MainWindowImpl implements MainWindow{
     private JButton deleteButton;
     private JButton searchButton;
     private JButton saveChangesButton;
+    private JCheckBox onlyIntroCheckBox;
 
     private CatalogPresenter catalogPresenter;
 
@@ -70,6 +71,11 @@ public class MainWindowImpl implements MainWindow{
     @Override
     public String getDisplayedArticle() {
         return textPane2.getText();
+    }
+
+    @Override
+    public String getSearchTitle() {
+        return textField1.getText();
     }
 
     @Override

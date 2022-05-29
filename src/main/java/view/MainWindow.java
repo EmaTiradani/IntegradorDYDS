@@ -17,4 +17,6 @@ public interface MainWindow {
 
     String getDisplayedArticle();
 
+    String getSearchTitle();//Titulo de textField1
+
 }

@@ -1,10 +1,14 @@
 package presenter;
 
+import dyds.gourmetCatalog.fulllogic.DataBase;
 import model.CatalogModel;
 import model.CatalogModelImpl;
 import model.CatalogModelListener;
 import view.MainWindow;
 import view.MainWindowImpl;
+
+import javax.swing.*;
+import java.util.Arrays;
 
 public class CatalogPresenterImpl implements CatalogPresenter{
 
@@ -22,6 +26,7 @@ public class CatalogPresenterImpl implements CatalogPresenter{
 
         String[] test= {"Hola","Pepe","Salame","See"};
         view.setStoredList(test);
+        initListeners();
         view.showView();
     }
 
@@ -49,7 +54,7 @@ public class CatalogPresenterImpl implements CatalogPresenter{
 
     @Override
     public void onEventSaveArticle() {
-        model.saveArticle(view.getSearchedContent());
+        model.saveArticle(view.getSearchTitle(), view.getSearchedContent());
     }
 
 
@@ -67,12 +72,15 @@ public class CatalogPresenterImpl implements CatalogPresenter{
 
             @Override
             public void didSaveLocally() {
-
+                //Al momento de guardar cosas locales solo le agrego el nuevo titulo al combobox
+                Object[] titles = DataBase.getTitles().stream().sorted().toArray();//TODO -> mal, le tengo que pedir cosas al modelo, no a la database
+                String[] titlesAsStringArray = Arrays.copyOf(titles, titles.length, String[].class);
+                view.setStoredList(titlesAsStringArray);
             }
 
             @Override
             public void didSelectSavedSearch() {
-
+                //view.set
             }
 
             @Override
