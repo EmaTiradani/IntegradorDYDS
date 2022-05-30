@@ -6,6 +6,8 @@ public interface CatalogModel {
 
     String getSearchResult();
 
+    SearchResult[] getPreliminaryResults();
+
     String getSave(String name);
 
     boolean saveArticleChanges(String title, String body);
@@ -13,4 +15,9 @@ public interface CatalogModel {
     boolean saveArticle(String title, String body);
 
     boolean deleteArticle(String title);
+
+    String[] getStoredTitles();
+
+    void searchOnWiki(String title);
+
 }

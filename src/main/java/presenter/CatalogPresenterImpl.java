@@ -1,14 +1,11 @@
 package presenter;
 
-import dyds.gourmetCatalog.fulllogic.DataBase;
+import model.SearchResult;
 import model.CatalogModel;
 import model.CatalogModelImpl;
 import model.CatalogModelListener;
 import view.MainWindow;
 import view.MainWindowImpl;
-
-import javax.swing.*;
-import java.util.Arrays;
 
 public class CatalogPresenterImpl implements CatalogPresenter{
 
@@ -18,38 +15,35 @@ public class CatalogPresenterImpl implements CatalogPresenter{
     public CatalogPresenterImpl(){
         this.view = new MainWindowImpl(this);
         this.model = new CatalogModelImpl();
-
+        this.view.setStoredList(model.getStoredTitles());
     }
 
     @Override
     public void start() {
-
-        String[] test= {"Hola","Pepe","Salame","See"};
-        view.setStoredList(test);
         initListeners();
         view.showView();
     }
 
     @Override
     public void onEventSearch() {
-
+        model.searchOnWiki(view.getSearchTitle());
     }
 
     @Override
     public void onEventShowSaved(){
-
+        String body = model.getSave(view.getSavesSelection());
+        view.setStoredContent(body);
     }
 
     @Override
     public void onEventDeleteArticle() {
-
+        model.deleteArticle(view.getSavesSelection());
     }
 
     @Override
     public void onEventSaveChanges() {
         //DataBase.saveInfo(comboBox1.getSelectedItem().toString().replace("'", "`"), textPane2.getText()); todo acordarse de lo de las comillas mandarlo a la DB
         model.saveArticleChanges(view.getSavesSelection(),view.getDisplayedArticle());
-
     }
 
     @Override
@@ -62,7 +56,9 @@ public class CatalogPresenterImpl implements CatalogPresenter{
         model.addListener(new CatalogModelListener() {
             @Override
             public void didSearchOnWiki() {
-                view.setSearchedContent(model.getSearchResult());
+                //view.setSearchedContent(model.getSearchResult());
+                SearchResult[] titles = model.getPreliminaryResults();
+                view.displaySearchOptions(titles);
             }
 
             @Override
@@ -73,9 +69,8 @@ public class CatalogPresenterImpl implements CatalogPresenter{
             @Override
             public void didSaveLocally() {
                 //Al momento de guardar cosas locales solo le agrego el nuevo titulo al combobox
-                Object[] titles = DataBase.getTitles().stream().sorted().toArray();//TODO -> mal, le tengo que pedir cosas al modelo, no a la database
-                String[] titlesAsStringArray = Arrays.copyOf(titles, titles.length, String[].class);
-                view.setStoredList(titlesAsStringArray);
+                String[] titles = model.getStoredTitles();
+                view.setStoredList(titles);
             }
 
             @Override
@@ -85,7 +80,8 @@ public class CatalogPresenterImpl implements CatalogPresenter{
 
             @Override
             public void didDeleteSave() {
-
+                view.setStoredContent("");
+                view.setStoredList(model.getStoredTitles());
             }
 
         });

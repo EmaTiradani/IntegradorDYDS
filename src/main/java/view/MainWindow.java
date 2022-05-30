@@ -1,9 +1,11 @@
 package view;
 
+import model.SearchResult;
+
 public interface MainWindow {
     void showView();
 
-    void getSearchBarText();//Va al textField1 cambiar void
+    String getSearchBarText();//Va al textField1 cambiar void
 
     void setSearchedContent(String text);//Va al textPane1
 
@@ -19,4 +21,7 @@ public interface MainWindow {
 
     String getSearchTitle();//Titulo de textField1
 
+    void displaySearchOptions(SearchResult[] preliminarResults);//Le mandas titulos para que cree el JPopupMenu
+
+    boolean getOnlyIntro();//Retorna true si tiene que traer solo la intro
 }

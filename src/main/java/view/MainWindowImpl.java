@@ -1,6 +1,8 @@
 package view;
 
+import com.google.gson.JsonElement;
 import dyds.gourmetCatalog.fulllogic.DataBase;
+import model.SearchResult;
 import presenter.CatalogPresenter;
 
 import javax.swing.*;
@@ -28,8 +30,6 @@ public class MainWindowImpl implements MainWindow{
     public MainWindowImpl(CatalogPresenter catalogPresenter){
         this.catalogPresenter = catalogPresenter;
         initListeners();
-
-
     }
 
     @Override
@@ -39,12 +39,11 @@ public class MainWindowImpl implements MainWindow{
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-
     }
 
     @Override
-    public void getSearchBarText() {
-
+    public String getSearchBarText() {
+        return textField1.getText();
     }
 
     @Override
@@ -79,6 +78,22 @@ public class MainWindowImpl implements MainWindow{
     }
 
     @Override
+    public void displaySearchOptions(SearchResult[] preliminarResults) {
+        JPopupMenu searchOptionsMenu = new JPopupMenu("Search Results");
+        for (SearchResult res : preliminarResults) {
+            searchOptionsMenu.add(res);
+            //res.addActionListener(
+            //TODO METERLE EL LISTENER
+        }
+        searchOptionsMenu.show(textField1, textField1.getX(), textField1.getY());
+    }
+
+    @Override
+    public boolean getOnlyIntro() {
+        return onlyIntroCheckBox.isSelected();
+    }
+
+    @Override
     public void setStoredList(String[] storedArticles) {
         comboBox1.setModel(new DefaultComboBoxModel<Object>(storedArticles));
     }
@@ -86,7 +101,6 @@ public class MainWindowImpl implements MainWindow{
     private void initListeners() {
         comboBox1.addActionListener(actionEvent -> catalogPresenter
                 .onEventShowSaved());
-
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -110,13 +124,6 @@ public class MainWindowImpl implements MainWindow{
             public void actionPerformed(ActionEvent e) {
                 catalogPresenter.onEventSaveArticle();
             }
-            /*saveLocallyButton.addActionListener(actionEvent -> {
-                if(text != ""){
-                    // save to DB  <o/
-                    DataBase.saveInfo(selectedResultTitle.replace("'", "`"), text);  //Dont forget the ' sql problem
-                    comboBox1.setModel(new DefaultComboBoxModel<Object>(DataBase.getTitles().stream().sorted().toArray()));
-                }
-            });*/
         });
     }
 }

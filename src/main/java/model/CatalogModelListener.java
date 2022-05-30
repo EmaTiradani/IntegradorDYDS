@@ -2,7 +2,7 @@ package model;
 
 public interface CatalogModelListener {
 
-    void didSearchOnWiki();
+    void didSearchOnWiki();//Esto lo uso para el preliminar result
 
     void didSelectSearchOption();//cuando buscas, te aparecen opciones y tocas una
 
