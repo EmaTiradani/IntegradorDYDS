@@ -1,7 +1,10 @@
 1. Como puedo hacer para pasar la seleccion del search result al presentador? Lo deberia guardar? No me gusta la idea.
+Ta bien esto
 2. textPane1.setContentType("text/html"); Y textPane2.setContentType("text/html"); Pueden estar en la creacion de la vista? O como la vista no hace nada deberia estar en el
 presentador para hacerlo con metodos.
+Tambien ta bien esto
 3. Para los popups de errores, los puede lanzar la database automaticamente? O puedo tener una lista en el modelo donde le cargo los errores y el presentador la recorre cada vez que hace algo?
+El metodo tiene que tirar un throw y lo tiene que manejar el modelo->avisarle al presentador y que este le diga a la vista mediante un metodo de popup error que muestre el error
 En caso de que no este vacia la lista le dice a la vista que muestre un cartel con el error correspondiente.
 4. Lo de la funcionalidad, que estoy haciendo mal? O capaz me faltan cosas(googlear)
-5.
+Esto esta en la parte de wikipedia page api
