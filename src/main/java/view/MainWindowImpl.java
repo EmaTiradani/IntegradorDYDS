@@ -49,11 +49,6 @@ public class MainWindowImpl implements MainWindow{
     }
 
     @Override
-    public String getSearchBarText() {
-        return textField1.getText();
-    }
-
-    @Override
     public void setSearchedContent(String text) {
         textPane1.setText(text);
         textPane1.setCaretPosition(0);
@@ -89,7 +84,7 @@ public class MainWindowImpl implements MainWindow{
         searchOptionsMenu = new JPopupMenu("Search Results");
         for (SearchResult res : preliminarResults) {
             searchOptionsMenu.add(res);
-            //TODO mmmmmmmmmmm dijo la muda. A ver, como puedo hacer para pasar
+            //TODO mmmmmmmmmmm dijo la muda. A ver, esta medio raro esto PREGUNTAR
             res.addActionListener(actionEvent -> {
                 selected = res;
                 catalogPresenter.onEventLoadArticle();
@@ -100,8 +95,6 @@ public class MainWindowImpl implements MainWindow{
 
     @Override
     public SearchResult getSearchSelection() {
-        //SearchResult selected 0 = searchOptionsMenu.getComponent();
-        System.out.print(selected.pageID);
         return selected;//todo feo
     }
 

@@ -7,8 +7,6 @@ import java.util.ArrayList;
 public interface MainWindow {
     void showView();
 
-    String getSearchBarText();//Va al textField1 cambiar void
-
     void setSearchedContent(String text);//Va al textPane1
 
     String getSearchedContent();

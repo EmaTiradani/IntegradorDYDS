@@ -44,7 +44,6 @@ public class CatalogPresenterImpl implements CatalogPresenter{
 
     @Override
     public void onEventSaveChanges() {
-        //DataBase.saveInfo(comboBox1.getSelectedItem().toString().replace("'", "`"), textPane2.getText()); todo acordarse de lo de las comillas mandarlo a la DB
         model.saveArticleChanges(view.getSavesSelection(),view.getDisplayedArticle());
     }
 
@@ -55,7 +54,6 @@ public class CatalogPresenterImpl implements CatalogPresenter{
 
     @Override
     public void onEventLoadArticle() {
-        System.out.print("Searching article from title selection");
         model.getExtract(view.getSearchSelection());
     }
 
@@ -64,24 +62,21 @@ public class CatalogPresenterImpl implements CatalogPresenter{
         model.setSearchMode(view.getOnlyIntro());
     }
 
-
     private void initListeners(){
         model.addListener(new CatalogModelListener() {
             @Override
             public void didSearchOnWiki() {
-                //view.setSearchedContent(model.getSearchResult());
                 ArrayList<SearchResult> titles = model.getPreliminaryResults();
                 view.displaySearchOptions(titles);
             }
 
-            @Override
+            /*@Override
             public void didSelectSearchOption() {
                 view.setStoredContent(model.getSave(view.getSavesSelection()));
-            }
+            }*/
 
             @Override
             public void didSaveLocally() {
-                //Al momento de guardar cosas locales solo le agrego el nuevo titulo al combobox
                 String[] titles = model.getStoredTitles();
                 view.setStoredList(titles);
             }

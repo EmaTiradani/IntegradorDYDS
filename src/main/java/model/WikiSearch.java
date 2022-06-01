@@ -16,6 +16,8 @@ import java.util.*;
 
 public class WikiSearch {
 
+    boolean enableSearchFullArticle = false;
+
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://en.wikipedia.org/w/")
             .addConverterFactory(ScalarsConverterFactory.create())
@@ -24,8 +26,7 @@ public class WikiSearch {
     WikipediaSearchAPI searchAPI = retrofit.create(WikipediaSearchAPI.class);
     WikipediaPageAPI pageAPI = retrofit.create(WikipediaPageAPI.class);
 
-    //todo variables rancias
-    String selectedResultTitle = null; //For storage purposes, se below that it may not coincide with the searched term
+    //todo variable rancia
     String text = ""; //Last searched text! this variable is central for everything
 
     public ArrayList<SearchResult> search(String title){
@@ -40,11 +41,8 @@ public class WikiSearch {
             Gson gson = new Gson();
             JsonObject jobj = gson.fromJson(callForSearchResponse.body(), JsonObject.class);
             JsonObject query = jobj.get("query").getAsJsonObject();
-            Iterator<JsonElement> resultIterator = query.get("search").getAsJsonArray().iterator();
+            //Iterator<JsonElement> resultIterator = query.get("search").getAsJsonArray().iterator();
             JsonArray jsonResults = query.get("search").getAsJsonArray();
-
-            JPopupMenu searchOptionsMenu = new JPopupMenu("Search Results");
-
 
             for (JsonElement je : jsonResults) {
                 JsonObject searchResult = je.getAsJsonObject();
@@ -53,37 +51,7 @@ public class WikiSearch {
                 String searchResultSnippet = searchResult.get("snippet").getAsString();
 
                 SearchResult sr = new SearchResult(searchResultTitle, searchResultPageId, searchResultSnippet);
-                //searchOptionsMenu.add(sr);
                 results.add(sr);
-                /*sr.addActionListener(actionEvent -> {
-                    try {
-                        //This may take some time, dear user be patient in the meanwhile!
-                        //setWorkingStatus();
-                        Response<String> callForPageResponse = pageAPI.getExtractByPageID(sr.pageID).execute();
-
-                        System.out.println("JSON " + callForPageResponse.body());
-                        JsonObject jobj2 = gson.fromJson(callForPageResponse.body(), JsonObject.class);
-                        JsonObject query2 = jobj2.get("query").getAsJsonObject();
-                        JsonObject pages = query2.get("pages").getAsJsonObject();
-                        Set<Map.Entry<String, JsonElement>> pagesSet = pages.entrySet();
-                        Map.Entry<String, JsonElement> first = pagesSet.iterator().next();
-                        JsonObject page = first.getValue().getAsJsonObject();
-                        JsonElement searchResultExtract2 = page.get("extract");
-                        if (searchResultExtract2 == null) {
-                            text = "No Results";
-                        } else {
-                            //text = "<h1>" + sr.title + "</h1>";
-                            //selectedResultTitle = sr.title;
-                            text += searchResultExtract2.getAsString().replace("\\n", "\n");
-                            text = textToHtml(text);
-
-                            //Not yet...
-                            //text+="\n" + "<a href=https://en.wikipedia.org/?curid=" + searchResultPageId +">View Full Article</a>";
-                        }
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-        });*/
             }
         }catch (IOException e1) {
             e1.printStackTrace();
@@ -113,12 +81,14 @@ public class WikiSearch {
             text = "No Results";
         } else {
             text = "<h1>" + searchResult.title + "</h1>";
-            selectedResultTitle = searchResult.title;
             text += searchResultExtract2.getAsString().replace("\\n", "\n");
             text = textToHtml(text);
 
-            //Not yet...
-            //text+="\n" + "<a href=https://en.wikipedia.org/?curid=" + searchResultPageId +">View Full Article</a>";
+            //TODO Falta algo?
+            if(enableSearchFullArticle){
+                text+="\n" + "<a href=https://en.wikipedia.org/?curid=" + searchResult.pageID +">View Full Article</a>";
+            }
+
         }
         return text;
     }
@@ -137,5 +107,9 @@ public class WikiSearch {
         builder.append("</font>");
 
         return builder.toString();
+    }
+
+    public void toggleFullArticle(boolean fullArticle){
+        enableSearchFullArticle = fullArticle;
     }
 }

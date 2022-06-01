@@ -53,7 +53,6 @@ public class MainWindow {
     // this is needed to open a link in the browser
 
     textField1.addActionListener(e -> new Thread(() -> {
-              //todo a partir de aca le aviso al presentador para que el modelo haga todo esto
               //This may take some time, dear user be patient in the meanwhile!
               setWorkingStatus();
               // get from service

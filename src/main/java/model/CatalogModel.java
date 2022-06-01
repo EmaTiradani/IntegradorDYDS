@@ -7,8 +7,6 @@ public interface CatalogModel {
 
     void addListener(CatalogModelListener listener);
 
-    String getSearchResult();
-
     ArrayList<SearchResult> getPreliminaryResults();
 
     String getSave(String name);

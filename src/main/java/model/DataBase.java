@@ -66,7 +66,10 @@ public class DataBase {
     }
 
     public static void saveInfo(String title, String extract)
+
     {
+        String formattedTitle = title.replace("'", "`");
+
         Connection connection = null;
         try
         {
@@ -76,9 +79,9 @@ public class DataBase {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-            System.out.println("INSERT  " + title + "', '"+ extract);
+            System.out.println("INSERT  " + formattedTitle + "', '"+ extract);
 
-            statement.executeUpdate("replace into catalog values(null, '"+ title + "', '"+ extract + "', 1)");
+            statement.executeUpdate("replace into catalog values(null, '"+ formattedTitle + "', '"+ extract + "', 1)");
         }
         catch(SQLException e)
         {
