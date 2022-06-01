@@ -1,50 +1,14 @@
 package model;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-public class CatalogModelImpl implements CatalogModel {
+public class CatalogLocalModelImpl implements CatalogLocalModel{
 
-    ArrayList<SearchResult> results = new ArrayList<>();
-    WikiSearch searcher = new WikiSearch();
     private ArrayList<CatalogModelListener> listeners = new ArrayList<>();
     private String errorMessage = "";
 
-    private String extract;
-
-    public String getExtract2(){
-        return extract;
-    }
-
-    @Override
-    public void setSearchMode(boolean onlyIntro) {
-        searcher.toggleFullArticle(onlyIntro);
-    }
-
-    @Override
-    public void searchOnWiki(String title){
-        try {
-            results = searcher.search(title);
-        } catch (IOException e) {
-            //e.printStackTrace();
-            errorMessage = "ERROR AAAAAAAAAAAAAAAA";
-            notifyError();
-        }
-        notifySearchListener();
-    }
-
-    @Override
-    public String getExtract(SearchResult result){
-        extract = searcher.getExtract(result);
-        notifySelectSearchListener();
-        return extract;
-    }
-
-    @Override
-    public String getSave(String title) {
-        return DataBase.getExtract(title);
-    }
 
     @Override
     public String getErrorMessage() {
@@ -52,8 +16,8 @@ public class CatalogModelImpl implements CatalogModel {
     }
 
     @Override
-    public ArrayList<SearchResult> getPreliminaryResults() {
-        return results;
+    public String getSave(String title) {
+        return DataBase.getExtract(title);
     }
 
     @Override
@@ -96,20 +60,11 @@ public class CatalogModelImpl implements CatalogModel {
         return titlesAsStringArray;
     }
 
-    public void addListener(CatalogModelListener listener){
-        this.listeners.add(listener);
+    @Override
+    public void addListener(CatalogModelListener listener) {
+        listeners.add(listener);
     }
 
-    private void notifySearchListener(){
-        for(CatalogModelListener listener: listeners){
-            listener.didSearchOnWiki();
-        }
-    }
-    private void notifySelectSearchListener(){
-        for(CatalogModelListener listener: listeners){
-            listener.didSearchExtract();
-        }
-    }
     private void notifySaveListener(){
         for(CatalogModelListener listener: listeners){
             listener.didSaveLocally();
@@ -128,5 +83,4 @@ public class CatalogModelImpl implements CatalogModel {
         }
 
     }
-
 }

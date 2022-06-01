@@ -104,6 +104,11 @@ public class MainWindowImpl implements MainWindow{
     }
 
     @Override
+    public void errorMessage(String errorMessage) {
+        JOptionPane.showMessageDialog(null, errorMessage);
+    }
+
+    @Override
     public void setStoredList(String[] storedArticles) {
         comboBox1.setModel(new DefaultComboBoxModel<Object>(storedArticles));
     }

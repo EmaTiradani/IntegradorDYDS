@@ -4,13 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import model.wikiAPI.WikipediaFullPageAPI;
 import model.wikiAPI.WikipediaPageAPI;
 import model.wikiAPI.WikipediaSearchAPI;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 
@@ -24,15 +24,13 @@ public class WikiSearch {
             .build();
 
     WikipediaSearchAPI searchAPI = retrofit.create(WikipediaSearchAPI.class);
-    WikipediaPageAPI pageAPI = retrofit.create(WikipediaPageAPI.class);
+    WikipediaFullPageAPI pageAPI = retrofit.create(WikipediaFullPageAPI.class);
+    WikipediaPageAPI fullPageAPI = retrofit.create(WikipediaPageAPI.class);
 
-    //todo variable rancia
-    String text = ""; //Last searched text! this variable is central for everything
-
-    public ArrayList<SearchResult> search(String title){
+    public ArrayList<SearchResult> search(String title) throws IOException {
 
         ArrayList<SearchResult> results = new ArrayList<>();
-        try{
+        //try{
             Response<String> callForSearchResponse;
             callForSearchResponse = searchAPI.searchForTerm(title + " articletopic:\"food-and-drink\"").execute();
 
@@ -53,22 +51,27 @@ public class WikiSearch {
                 SearchResult sr = new SearchResult(searchResultTitle, searchResultPageId, searchResultSnippet);
                 results.add(sr);
             }
-        }catch (IOException e1) {
+        /*}catch (IOException e1) {
             e1.printStackTrace();
-        }
+        }*/
         return results;
     }
 
     public String getExtract(SearchResult searchResult){
+        String extract = ""; //Last searched text! this variable is central for everything
         Response<String> callForPageResponse = null;
         try {
-            callForPageResponse = pageAPI.getExtractByPageID(searchResult.pageID).execute();
+            if(enableSearchFullArticle){
+                callForPageResponse = pageAPI.getExtractByPageID(searchResult.pageID).execute();
+            }else{
+                callForPageResponse = fullPageAPI.getExtractByPageID(searchResult.pageID).execute();
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         Gson gson = new Gson();
-        //faltan unas cosas del gson
 
         JsonObject jobj2 = gson.fromJson(callForPageResponse.body(), JsonObject.class);
         JsonObject query2 = jobj2.get("query").getAsJsonObject();
@@ -78,26 +81,26 @@ public class WikiSearch {
         JsonObject page = first.getValue().getAsJsonObject();
         JsonElement searchResultExtract2 = page.get("extract");
         if (searchResultExtract2 == null) {
-            text = "No Results";
+            extract = "No Results";
         } else {
-            text = "<h1>" + searchResult.title + "</h1>";
-            text += searchResultExtract2.getAsString().replace("\\n", "\n");
-            text = textToHtml(text);
+            extract = "<h1>" + searchResult.title + "</h1>";
+            extract += searchResultExtract2.getAsString().replace("\\n", "\n");
+            extract = textToHtml(extract);
 
             //TODO Falta algo?
             if(enableSearchFullArticle){
-                text+="\n" + "<a href=https://en.wikipedia.org/?curid=" + searchResult.pageID +">View Full Article</a>";
+                extract+="\n" + "<a href=https://en.wikipedia.org/?curid=" + searchResult.pageID +">View Full Article</a>";
             }
 
         }
-        return text;
+        return extract;
     }
 
     public static String textToHtml(String text) {
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append("<font face=\"arial\">");
+        //builder.append("<font face=\"arial\">");
 
         String fixedText = text
                 .replace("'", "`"); //Replace to avoid SQL errors, we will have to find a workaround..

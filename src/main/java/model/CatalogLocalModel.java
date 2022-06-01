@@ -1,11 +1,11 @@
 package model;
-import java.util.ArrayList;
 
-public interface CatalogModel {
+public interface CatalogLocalModel {
 
     void addListener(CatalogModelListener listener);
 
     String getErrorMessage();
+
 
     String getSave(String name);
 
@@ -16,14 +16,4 @@ public interface CatalogModel {
     boolean deleteArticle(String title);
 
     String[] getStoredTitles();
-
-    void searchOnWiki(String title);
-
-    String getExtract(SearchResult searchResult);
-
-    String getExtract2();
-
-    void setSearchMode(boolean onlyIntro);
-
-    ArrayList<SearchResult> getPreliminaryResults();
 }

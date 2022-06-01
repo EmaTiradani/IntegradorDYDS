@@ -6,7 +6,6 @@ import model.CatalogModelImpl;
 import model.CatalogModelListener;
 import view.MainWindow;
 import view.MainWindowImpl;
-
 import java.util.ArrayList;
 
 public class CatalogPresenterImpl implements CatalogPresenter{
@@ -70,20 +69,11 @@ public class CatalogPresenterImpl implements CatalogPresenter{
                 view.displaySearchOptions(titles);
             }
 
-            /*@Override
-            public void didSelectSearchOption() {
-                view.setStoredContent(model.getSave(view.getSavesSelection()));
-            }*/
-
             @Override
             public void didSaveLocally() {
                 String[] titles = model.getStoredTitles();
                 view.setStoredList(titles);
-            }
-
-            @Override
-            public void didSelectSavedSearch() {
-                view.setSearchedContent(model.getExtract2());
+                view.errorMessage("Saved succesfully!");
             }
 
             @Override
@@ -92,9 +82,15 @@ public class CatalogPresenterImpl implements CatalogPresenter{
             }
 
             @Override
+            public void didThrowException() {
+                view.errorMessage(model.getErrorMessage());
+            }
+
+            @Override
             public void didDeleteSave() {
                 view.setStoredContent("");
                 view.setStoredList(model.getStoredTitles());
+                view.errorMessage("Deleted succesfully!");
             }
         });
 

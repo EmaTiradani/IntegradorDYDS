@@ -26,4 +26,6 @@ public interface MainWindow {
     SearchResult getSearchSelection();
 
     boolean getOnlyIntro();//Retorna true si tiene que traer solo la intro
+
+    void errorMessage(String errorMessage);
 }

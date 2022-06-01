@@ -6,10 +6,9 @@ public interface CatalogModelListener {
 
     void didSaveLocally();//tocar el boton de guardar localmente
 
-    void didSelectSavedSearch();//cuando elegis algo del combobox
-
     void didDeleteSave();
 
     void didSearchExtract();
 
+    void didThrowException();//Cuando algo lanza una excepcion
 }

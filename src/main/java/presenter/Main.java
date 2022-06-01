@@ -1,8 +1,6 @@
 package presenter;
 
 import dyds.gourmetCatalog.fulllogic.DataBase;
-import model.CatalogModel;
-import model.CatalogModelImpl;
 
 public class Main {
 
