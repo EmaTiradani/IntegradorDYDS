@@ -1,12 +1,15 @@
 package model;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 public interface CatalogModel {
 
     void addListener(CatalogModelListener listener);
 
     String getSearchResult();
 
-    SearchResult[] getPreliminaryResults();
+    ArrayList<SearchResult> getPreliminaryResults();
 
     String getSave(String name);
 
@@ -20,4 +23,9 @@ public interface CatalogModel {
 
     void searchOnWiki(String title);
 
+    String getExtract(SearchResult searchResult);
+
+    String getExtract2();
+
+    void setSearchMode(boolean onlyIntro);
 }

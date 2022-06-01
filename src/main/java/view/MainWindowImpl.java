@@ -8,6 +8,7 @@ import presenter.CatalogPresenter;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class MainWindowImpl implements MainWindow{
 
@@ -24,12 +25,18 @@ public class MainWindowImpl implements MainWindow{
     private JButton searchButton;
     private JButton saveChangesButton;
     private JCheckBox onlyIntroCheckBox;
+    private  JPopupMenu searchOptionsMenu;
+
+    private SearchResult selected;//todo sacar esto cuando arregle el funcionamiento del JPopupmenu
 
     private CatalogPresenter catalogPresenter;
 
     public MainWindowImpl(CatalogPresenter catalogPresenter){
         this.catalogPresenter = catalogPresenter;
         initListeners();
+        textPane1.setContentType("text/html");
+        textPane2.setContentType("text/html");
+
     }
 
     @Override
@@ -78,14 +85,24 @@ public class MainWindowImpl implements MainWindow{
     }
 
     @Override
-    public void displaySearchOptions(SearchResult[] preliminarResults) {
-        JPopupMenu searchOptionsMenu = new JPopupMenu("Search Results");
+    public void displaySearchOptions(ArrayList<SearchResult> preliminarResults) {
+        searchOptionsMenu = new JPopupMenu("Search Results");
         for (SearchResult res : preliminarResults) {
             searchOptionsMenu.add(res);
-            //res.addActionListener(
-            //TODO METERLE EL LISTENER
+            //TODO mmmmmmmmmmm dijo la muda. A ver, como puedo hacer para pasar
+            res.addActionListener(actionEvent -> {
+                selected = res;
+                catalogPresenter.onEventLoadArticle();
+            });
         }
         searchOptionsMenu.show(textField1, textField1.getX(), textField1.getY());
+    }
+
+    @Override
+    public SearchResult getSearchSelection() {
+        //SearchResult selected 0 = searchOptionsMenu.getComponent();
+        System.out.print(selected.pageID);
+        return selected;//todo feo
     }
 
     @Override
@@ -123,6 +140,12 @@ public class MainWindowImpl implements MainWindow{
             @Override
             public void actionPerformed(ActionEvent e) {
                 catalogPresenter.onEventSaveArticle();
+            }
+        });
+        onlyIntroCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                catalogPresenter.onEventChooseOnlyIntro();
             }
         });
     }

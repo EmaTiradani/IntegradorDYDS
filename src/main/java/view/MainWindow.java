@@ -2,6 +2,8 @@ package view;
 
 import model.SearchResult;
 
+import java.util.ArrayList;
+
 public interface MainWindow {
     void showView();
 
@@ -21,7 +23,9 @@ public interface MainWindow {
 
     String getSearchTitle();//Titulo de textField1
 
-    void displaySearchOptions(SearchResult[] preliminarResults);//Le mandas titulos para que cree el JPopupMenu
+    void displaySearchOptions(ArrayList<SearchResult> preliminarResults);//Le mandas titulos para que cree el JPopupMenu
+
+    SearchResult getSearchSelection();
 
     boolean getOnlyIntro();//Retorna true si tiene que traer solo la intro
 }

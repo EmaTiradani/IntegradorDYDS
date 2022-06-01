@@ -20,6 +20,9 @@ public class CatalogModelImpl implements CatalogModel {
     String selectedResultTitle = null;
     String lastSearchedText = "";
     private DataBase dataBase;
+    ArrayList<SearchResult> results = new ArrayList<>();
+    WikiSearch searcher = new WikiSearch();
+    boolean searchMode = true;
 
     private ArrayList<CatalogModelListener> listeners = new ArrayList<>();
 
@@ -27,16 +30,34 @@ public class CatalogModelImpl implements CatalogModel {
         this.dataBase=dataBase;
     }
 
+    private String extract;
+
+    public String getExtract2(){
+        return extract;
+    }
+
+    @Override
+    public void setSearchMode(boolean onlyIntro) {
+        searchMode = onlyIntro;
+    }
+
     @Override
     public void searchOnWiki(String title){
 
-        WikiSearch searcher = new WikiSearch();
-        lastSearchedText = searcher.search(title);
+
+        results = searcher.search(title);
         notifySearchListener();
         //searchOptionsMenu.show(textField1, textField1.getX(), textField1.getY());
         //} catch (IOException e1) { Esta parte eran las excepciones de IO, que el modelo no tiene nada que ver
         //    e1.printStackTrace();
         //}
+    }
+
+    @Override
+    public String getExtract(SearchResult result){
+        extract = searcher.getExtract(result);
+        notifySelectSearchListener();
+        return extract;
     }
 
     @Override
@@ -51,15 +72,14 @@ public class CatalogModelImpl implements CatalogModel {
     }
 
     @Override
-    public SearchResult[] getPreliminaryResults() {
+    public ArrayList<SearchResult> getPreliminaryResults() {
         SearchResult dummy = new SearchResult("Hola","1","see");
         SearchResult[] searchResults = {dummy};
-        return searchResults;
+        return results;
     }
 
     @Override
     public boolean saveArticleChanges(String title, String body) {
-        //DataBase.saveInfo(comboBox1.getSelectedItem().toString().replace("'", "`"), textPane2.getText());  //Dont forget the ' sql problem
         DataBase.saveInfo(title.replace("'", "`"), body);//Todo hacer que lo de comillas lo haga la database
         notifySaveListener();
         return true; //Que retorne falso si la database no lo pudo meter o algo asi.
@@ -78,10 +98,6 @@ public class CatalogModelImpl implements CatalogModel {
 
     @Override
     public boolean deleteArticle(String title) {
-        /*if(comboBox1.getSelectedIndex() > -1){
-            DataBase.deleteEntry(comboBox1.getSelectedItem().toString());
-            comboBox1.setModel(new DefaultComboBoxModel<Object>(DataBase.getTitles().stream().sorted().toArray()));
-            textPane2.setText("");*/
         DataBase.deleteEntry(title);
         notifyDeleteListener();
         return true;
@@ -93,7 +109,6 @@ public class CatalogModelImpl implements CatalogModel {
         String[] titlesAsStringArray = Arrays.copyOf(titles, titles.length, String[].class);
         return titlesAsStringArray;
     }
-
 
     public void addListener(CatalogModelListener listener){
         this.listeners.add(listener);
@@ -107,7 +122,7 @@ public class CatalogModelImpl implements CatalogModel {
     }
     private void notifySelectSearchListener(){
         for(CatalogModelListener listener: listeners){
-            listener.didSelectSearchOption();
+            listener.didSearchExtract();
         }
     }
     private void notifySaveListener(){
@@ -126,24 +141,4 @@ public class CatalogModelImpl implements CatalogModel {
         }
     }
 
-
-
-
-
-
-    public static String textToHtml(String text) {
-
-        StringBuilder builder = new StringBuilder();
-
-        builder.append("<font face=\"arial\">");
-
-        String fixedText = text
-                .replace("'", "`"); //Replace to avoid SQL errors, we will have to find a workaround..
-
-        builder.append(fixedText);
-
-        builder.append("</font>");
-
-        return builder.toString();
-    }
 }

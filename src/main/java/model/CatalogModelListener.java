@@ -12,4 +12,6 @@ public interface CatalogModelListener {
 
     void didDeleteSave();
 
+    void didSearchExtract();
+
 }

@@ -7,6 +7,8 @@ import model.CatalogModelListener;
 import view.MainWindow;
 import view.MainWindowImpl;
 
+import java.util.ArrayList;
+
 public class CatalogPresenterImpl implements CatalogPresenter{
 
     private CatalogModel model;
@@ -51,13 +53,24 @@ public class CatalogPresenterImpl implements CatalogPresenter{
         model.saveArticle(view.getSearchTitle(), view.getSearchedContent());
     }
 
+    @Override
+    public void onEventLoadArticle() {
+        System.out.print("Searching article from title selection");
+        model.getExtract(view.getSearchSelection());
+    }
+
+    @Override
+    public void onEventChooseOnlyIntro() {
+        model.setSearchMode(view.getOnlyIntro());
+    }
+
 
     private void initListeners(){
         model.addListener(new CatalogModelListener() {
             @Override
             public void didSearchOnWiki() {
                 //view.setSearchedContent(model.getSearchResult());
-                SearchResult[] titles = model.getPreliminaryResults();
+                ArrayList<SearchResult> titles = model.getPreliminaryResults();
                 view.displaySearchOptions(titles);
             }
 
@@ -75,7 +88,12 @@ public class CatalogPresenterImpl implements CatalogPresenter{
 
             @Override
             public void didSelectSavedSearch() {
-                //view.set
+                view.setSearchedContent(model.getExtract2());
+            }
+
+            @Override
+            public void didSearchExtract() {
+                view.setSearchedContent(model.getExtract2());
             }
 
             @Override
@@ -83,7 +101,6 @@ public class CatalogPresenterImpl implements CatalogPresenter{
                 view.setStoredContent("");
                 view.setStoredList(model.getStoredTitles());
             }
-
         });
 
     }

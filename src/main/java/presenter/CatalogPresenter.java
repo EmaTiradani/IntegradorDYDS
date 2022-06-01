@@ -16,5 +16,7 @@ public interface CatalogPresenter {
 
     void onEventSaveArticle();
 
+    void onEventLoadArticle();
 
+    void onEventChooseOnlyIntro();
 }

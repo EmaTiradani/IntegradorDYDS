@@ -17,5 +17,4 @@ public class SearchResult extends JMenuItem {
         this.snippet = snippet;
     }
 
-
 }

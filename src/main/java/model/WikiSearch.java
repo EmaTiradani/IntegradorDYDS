@@ -28,7 +28,9 @@ public class WikiSearch {
     String selectedResultTitle = null; //For storage purposes, se below that it may not coincide with the searched term
     String text = ""; //Last searched text! this variable is central for everything
 
-    public String search(String title){
+    public ArrayList<SearchResult> search(String title){
+
+        ArrayList<SearchResult> results = new ArrayList<>();
         try{
             Response<String> callForSearchResponse;
             callForSearchResponse = searchAPI.searchForTerm(title + " articletopic:\"food-and-drink\"").execute();
@@ -42,6 +44,8 @@ public class WikiSearch {
             JsonArray jsonResults = query.get("search").getAsJsonArray();
 
             JPopupMenu searchOptionsMenu = new JPopupMenu("Search Results");
+
+
             for (JsonElement je : jsonResults) {
                 JsonObject searchResult = je.getAsJsonObject();
                 String searchResultTitle = searchResult.get("title").getAsString();
@@ -49,8 +53,9 @@ public class WikiSearch {
                 String searchResultSnippet = searchResult.get("snippet").getAsString();
 
                 SearchResult sr = new SearchResult(searchResultTitle, searchResultPageId, searchResultSnippet);
-                searchOptionsMenu.add(sr);
-                sr.addActionListener(actionEvent -> {
+                //searchOptionsMenu.add(sr);
+                results.add(sr);
+                /*sr.addActionListener(actionEvent -> {
                     try {
                         //This may take some time, dear user be patient in the meanwhile!
                         //setWorkingStatus();
@@ -67,8 +72,8 @@ public class WikiSearch {
                         if (searchResultExtract2 == null) {
                             text = "No Results";
                         } else {
-                            text = "<h1>" + sr.title + "</h1>";
-                            selectedResultTitle = sr.title;
+                            //text = "<h1>" + sr.title + "</h1>";
+                            //selectedResultTitle = sr.title;
                             text += searchResultExtract2.getAsString().replace("\\n", "\n");
                             text = textToHtml(text);
 
@@ -78,10 +83,42 @@ public class WikiSearch {
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-        });
+        });*/
             }
         }catch (IOException e1) {
             e1.printStackTrace();
+        }
+        return results;
+    }
+
+    public String getExtract(SearchResult searchResult){
+        Response<String> callForPageResponse = null;
+        try {
+            callForPageResponse = pageAPI.getExtractByPageID(searchResult.pageID).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Gson gson = new Gson();
+        //faltan unas cosas del gson
+
+        JsonObject jobj2 = gson.fromJson(callForPageResponse.body(), JsonObject.class);
+        JsonObject query2 = jobj2.get("query").getAsJsonObject();
+        JsonObject pages = query2.get("pages").getAsJsonObject();
+        Set<Map.Entry<String, JsonElement>> pagesSet = pages.entrySet();
+        Map.Entry<String, JsonElement> first = pagesSet.iterator().next();
+        JsonObject page = first.getValue().getAsJsonObject();
+        JsonElement searchResultExtract2 = page.get("extract");
+        if (searchResultExtract2 == null) {
+            text = "No Results";
+        } else {
+            text = "<h1>" + searchResult.title + "</h1>";
+            selectedResultTitle = searchResult.title;
+            text += searchResultExtract2.getAsString().replace("\\n", "\n");
+            text = textToHtml(text);
+
+            //Not yet...
+            //text+="\n" + "<a href=https://en.wikipedia.org/?curid=" + searchResultPageId +">View Full Article</a>";
         }
         return text;
     }
