@@ -1,11 +1,11 @@
 package view;
 
-import com.google.gson.JsonElement;
-import dyds.gourmetCatalog.fulllogic.DataBase;
+
 import model.SearchResult;
 import presenter.CatalogPresenter;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -36,7 +36,6 @@ public class MainWindowImpl implements MainWindow{
         initListeners();
         textPane1.setContentType("text/html");
         textPane2.setContentType("text/html");
-
     }
 
     @Override
@@ -45,6 +44,8 @@ public class MainWindowImpl implements MainWindow{
         frame.setContentPane(contentPane);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
+        frame.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/pizza (1).png")));
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
@@ -65,7 +66,6 @@ public class MainWindowImpl implements MainWindow{
     }
 
     public String getSavesSelection(){
-        //comboBox1.addActionListener(actionEvent -> textPane2.setText(textToHtml(DataBase.getExtract(comboBox1.getSelectedItem().toString()))));
         return comboBox1.getSelectedItem().toString();
     }
 
@@ -84,7 +84,6 @@ public class MainWindowImpl implements MainWindow{
         searchOptionsMenu = new JPopupMenu("Search Results");
         for (SearchResult res : preliminarResults) {
             searchOptionsMenu.add(res);
-            //TODO mmmmmmmmmmm dijo la muda. A ver, esta medio raro esto PREGUNTAR
             res.addActionListener(actionEvent -> {
                 selected = res;
                 catalogPresenter.onEventLoadArticle();
