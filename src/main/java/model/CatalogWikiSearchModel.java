@@ -11,9 +11,9 @@ public interface CatalogWikiSearchModel {
 
     void searchOnWiki(String title);
 
-    String getExtract(SearchResult searchResult);
+    String searchExtract(SearchResult searchResult);
 
-    String getExtract2();
+    String getExtract();
 
     void setSearchMode(boolean onlyIntro);
 

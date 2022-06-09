@@ -12,30 +12,29 @@ import java.util.ArrayList;
 
 public class MainWindowImpl implements MainWindow{
 
-    private JTextField textField1;
+    private JTextField searchTitle;
     private JPanel contentPane;
-    private JTextPane textPane1;
+    private JTextPane searchedArticleBody;
     private JButton saveLocallyButton;
     private JTabbedPane tabbedPane1;
     private JPanel searchPanel;
     private JPanel storagePanel;
-    private JComboBox<Object> comboBox1;
-    private JTextPane textPane2;
+    private JComboBox<Object> storedArticlesTitles;
+    private JTextPane storedArticleBody;
     private JButton deleteButton;
     private JButton searchButton;
     private JButton saveChangesButton;
     private JCheckBox onlyIntroCheckBox;
-    private  JPopupMenu searchOptionsMenu;
+    private JPopupMenu searchOptionsMenu;
 
-    private SearchResult selected;//todo sacar esto cuando arregle el funcionamiento del JPopupmenu
-
+    private SearchResult selected;
     private CatalogPresenter catalogPresenter;
 
     public MainWindowImpl(CatalogPresenter catalogPresenter){
         this.catalogPresenter = catalogPresenter;
         initListeners();
-        textPane1.setContentType("text/html");
-        textPane2.setContentType("text/html");
+        searchedArticleBody.setContentType("text/html");
+        storedArticleBody.setContentType("text/html");
     }
 
     @Override
@@ -51,32 +50,32 @@ public class MainWindowImpl implements MainWindow{
 
     @Override
     public void setSearchedContent(String text) {
-        textPane1.setText(text);
-        textPane1.setCaretPosition(0);
+        searchedArticleBody.setText(text);
+        searchedArticleBody.setCaretPosition(0);
     }
 
     @Override
     public String getSearchedContent() {
-        return textPane1.getText();
+        return searchedArticleBody.getText();
     }
 
     @Override
     public void setStoredContent(String text) {
-        textPane2.setText(text);
+        storedArticleBody.setText(text);
     }
 
     public String getSavesSelection(){
-        return comboBox1.getSelectedItem().toString();
+        return storedArticlesTitles.getSelectedItem().toString();
     }
 
     @Override
     public String getDisplayedArticle() {
-        return textPane2.getText();
+        return storedArticleBody.getText();
     }
 
     @Override
     public String getSearchTitle() {
-        return textField1.getText();
+        return searchTitle.getText();
     }
 
     @Override
@@ -89,7 +88,7 @@ public class MainWindowImpl implements MainWindow{
                 catalogPresenter.onEventLoadArticle();
             });
         }
-        searchOptionsMenu.show(textField1, textField1.getX(), textField1.getY());
+        searchOptionsMenu.show(searchTitle, searchTitle.getX(), searchTitle.getY());
     }
 
     @Override
@@ -109,11 +108,11 @@ public class MainWindowImpl implements MainWindow{
 
     @Override
     public void setStoredList(String[] storedArticles) {
-        comboBox1.setModel(new DefaultComboBoxModel<Object>(storedArticles));
+        storedArticlesTitles.setModel(new DefaultComboBoxModel<Object>(storedArticles));
     }
 
     private void initListeners() {
-        comboBox1.addActionListener(actionEvent -> catalogPresenter
+        storedArticlesTitles.addActionListener(actionEvent -> catalogPresenter
                 .onEventShowSaved());
         searchButton.addActionListener(new ActionListener() {
             @Override

@@ -7,12 +7,12 @@ import java.util.Arrays;
 public class CatalogLocalModelImpl implements CatalogLocalModel{
 
     private ArrayList<CatalogModelListener> listeners = new ArrayList<>();
-    private String errorMessage = "";
+    private String message = "";
 
 
     @Override
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getMessage() {
+        return message;
     }
 
     @Override
@@ -24,11 +24,9 @@ public class CatalogLocalModelImpl implements CatalogLocalModel{
     public boolean saveArticleChanges(String title, String body) {
         try {
             DataBase.saveInfo(title, body);
-            errorMessage = "Saved changes";
             notifySaveListener();
         } catch (SQLException e) {
-            //e.printStackTrace();
-            errorMessage = "Error saving changes";
+            message = "Error saving changes";
             notifyError();
         }
         return true;
@@ -40,7 +38,7 @@ public class CatalogLocalModelImpl implements CatalogLocalModel{
             DataBase.saveInfo(title, body);
             notifySaveListener();
         } catch (SQLException e) {
-            errorMessage = "Error saving article";
+            message = "Error saving article";
             notifyError();
         }
         return true;

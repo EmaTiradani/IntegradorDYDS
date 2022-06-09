@@ -14,7 +14,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 import java.io.IOException;
 import java.util.*;
 
-public class WikiSearch {
+public class WikiSearch {//TODO interfacear esta clase para cumplir con ISP
 
     boolean enableSearchFullArticle = false;
 

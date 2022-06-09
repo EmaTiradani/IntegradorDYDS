@@ -1,9 +1,6 @@
 package presenter;
 
-import model.SearchResult;
-import model.CatalogModel;
-import model.CatalogModelImpl;
-import model.CatalogModelListener;
+import model.*;
 import view.MainWindow;
 import view.MainWindowImpl;
 import java.util.ArrayList;
@@ -11,6 +8,8 @@ import java.util.ArrayList;
 public class CatalogPresenterImpl implements CatalogPresenter{
 
     private CatalogModel model;
+    private CatalogLocalModel localModel;
+    private CatalogWikiSearchModel searchModel;
     private MainWindow view;
 
     public CatalogPresenterImpl(){
@@ -93,6 +92,5 @@ public class CatalogPresenterImpl implements CatalogPresenter{
                 view.errorMessage("Deleted succesfully!");
             }
         });
-
     }
 }

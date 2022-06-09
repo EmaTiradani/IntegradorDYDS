@@ -10,7 +10,6 @@ public class CatalogModelImpl implements CatalogModel {
     WikiSearch searcher = new WikiSearch();
     private ArrayList<CatalogModelListener> listeners = new ArrayList<>();
     private String errorMessage = "";
-
     private String extract;
 
     public String getExtract2(){
@@ -28,7 +27,7 @@ public class CatalogModelImpl implements CatalogModel {
             results = searcher.search(title);
         } catch (IOException e) {
             //e.printStackTrace();
-            errorMessage = "ERROR AAAAAAAAAAAAAAAA";
+            errorMessage = "Failed search";
             notifyError();
         }
         notifySearchListener();
@@ -60,7 +59,6 @@ public class CatalogModelImpl implements CatalogModel {
     public boolean saveArticleChanges(String title, String body) {
         try {
             DataBase.saveInfo(title, body);
-            errorMessage = "Saved changes";
             notifySaveListener();
         } catch (SQLException e) {
             //e.printStackTrace();

@@ -4,7 +4,7 @@ public interface CatalogLocalModel {
 
     void addListener(CatalogModelListener listener);
 
-    String getErrorMessage();
+    String getMessage();
 
 
     String getSave(String name);
