@@ -75,10 +75,7 @@ public class DataBase {
             connection = DriverManager.getConnection("jdbc:sqlite:./dictionary.db");
 
             Statement statement = connection.createStatement();
-            statement.setQueryTimeout(30);  // set timeout to 30 sec.
-
-            //System.out.println("INSERT  " + formattedTitle + "', '"+ extract);
-
+            statement.setQueryTimeout(30);
 
             statement.executeUpdate("replace into catalog values(null, '"+ formattedTitle + "', '"+ extract + "', 1)");
 
