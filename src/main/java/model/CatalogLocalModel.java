@@ -2,10 +2,11 @@ package model;
 
 public interface CatalogLocalModel {
 
-    void addListener(CatalogModelListener listener);
+    void addListener(CatalogLocalModelListener listener);
 
     String getMessage();
 
+    String getErrorMessage();
 
     String getSave(String name);
 

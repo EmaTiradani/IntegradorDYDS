@@ -8,11 +8,11 @@ public class CatalogWikiSearchModelImpl implements CatalogWikiSearchModel{
     WikiSearch searcher = new WikiSearch();
     ArrayList<SearchResult> results = new ArrayList<>();
     private String extract;
-    private ArrayList<CatalogModelListener> listeners = new ArrayList<>();
+    private ArrayList<CatalogWikiSearchModelListener> listeners = new ArrayList<>();
     private String errorMessage = "";
 
     @Override
-    public void addListener(CatalogModelListener listener) {
+    public void addListener(CatalogWikiSearchModelListener listener) {
         listeners.add(listener);
     }
 
@@ -22,12 +22,17 @@ public class CatalogWikiSearchModelImpl implements CatalogWikiSearchModel{
     }
 
     @Override
+    public String getExtract2() {
+        return extract;
+    }
+
+    @Override
     public void searchOnWiki(String title) {
         try {
             results = searcher.search(title);
         } catch (IOException e) {
             //e.printStackTrace();
-            errorMessage = "ERROR AAAAAAAAAAAAAAAA";
+            errorMessage = "Error searching on Wikipedia";
             notifyError();
         }
         notifySearchListener();
@@ -41,7 +46,9 @@ public class CatalogWikiSearchModelImpl implements CatalogWikiSearchModel{
     }
 
     @Override
-    public String getExtract() {
+    public String getExtract(SearchResult result){
+        extract = searcher.getExtract(result);
+        notifySelectSearchListener();
         return extract;
     }
 
@@ -56,17 +63,17 @@ public class CatalogWikiSearchModelImpl implements CatalogWikiSearchModel{
     }
 
     private void notifyError(){
-        for(CatalogModelListener listener: listeners) {
+        for(CatalogWikiSearchModelListener listener: listeners) {
             listener.didThrowException();
         }
     }
     private void notifySelectSearchListener(){
-        for(CatalogModelListener listener: listeners){
+        for(CatalogWikiSearchModelListener listener: listeners){
             listener.didSearchExtract();
         }
     }
     private void notifySearchListener() {
-        for(CatalogModelListener listener: listeners){
+        for(CatalogWikiSearchModelListener listener: listeners){
             listener.didSearchOnWiki();
         }
     }

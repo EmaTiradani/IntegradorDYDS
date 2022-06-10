@@ -4,16 +4,17 @@ import java.util.ArrayList;
 
 public interface CatalogWikiSearchModel {
 
-    void addListener(CatalogModelListener listener);
+    void addListener(CatalogWikiSearchModelListener listener);
 
     String getErrorMessage();
 
+    String getExtract2();
 
     void searchOnWiki(String title);
 
     String searchExtract(SearchResult searchResult);
 
-    String getExtract();
+    String getExtract(SearchResult searchResult);
 
     void setSearchMode(boolean onlyIntro);
 

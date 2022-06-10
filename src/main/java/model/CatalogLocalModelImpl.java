@@ -6,12 +6,17 @@ import java.util.Arrays;
 
 public class CatalogLocalModelImpl implements CatalogLocalModel{
 
-    private ArrayList<CatalogModelListener> listeners = new ArrayList<>();
+    private ArrayList<CatalogLocalModelListener> listeners = new ArrayList<>();
     private String message = "";
 
 
     @Override
     public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public String getErrorMessage() {
         return message;
     }
 
@@ -59,24 +64,24 @@ public class CatalogLocalModelImpl implements CatalogLocalModel{
     }
 
     @Override
-    public void addListener(CatalogModelListener listener) {
+    public void addListener(CatalogLocalModelListener listener) {
         listeners.add(listener);
     }
 
     private void notifySaveListener(){
-        for(CatalogModelListener listener: listeners){
+        for(CatalogLocalModelListener listener: listeners){
             listener.didSaveLocally();
         }
     }
 
     private void notifyDeleteListener(){
-        for(CatalogModelListener listener: listeners){
+        for(CatalogLocalModelListener listener: listeners){
             listener.didDeleteSave();
         }
     }
 
     private void notifyError(){
-        for(CatalogModelListener listener: listeners) {
+        for(CatalogLocalModelListener listener: listeners) {
             listener.didThrowException();
         }
 

@@ -1,9 +1,7 @@
 package view;
 
-
 import model.SearchResult;
 import presenter.CatalogPresenter;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -102,7 +100,7 @@ public class MainWindowImpl implements MainWindow{
     }
 
     @Override
-    public void errorMessage(String errorMessage) {
+    public void displayMessage(String errorMessage) {
         JOptionPane.showMessageDialog(null, errorMessage);
     }
 

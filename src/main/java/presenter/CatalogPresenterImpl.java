@@ -14,6 +14,8 @@ public class CatalogPresenterImpl implements CatalogPresenter{
 
     public CatalogPresenterImpl(){
         this.view = new MainWindowImpl(this);
+        this.searchModel = new CatalogWikiSearchModelImpl();
+        this.localModel = new CatalogLocalModelImpl();
         this.model = new CatalogModelImpl();
         this.view.setStoredList(model.getStoredTitles());
     }
@@ -26,45 +28,45 @@ public class CatalogPresenterImpl implements CatalogPresenter{
 
     @Override
     public void onEventSearch() {
-        model.searchOnWiki(view.getSearchTitle());
+        searchModel.searchOnWiki(view.getSearchTitle());
     }
 
     @Override
     public void onEventShowSaved(){
-        String body = model.getSave(view.getSavesSelection());
+        String body = localModel.getSave(view.getSavesSelection());
         view.setStoredContent(body);
     }
 
     @Override
     public void onEventDeleteArticle() {
-        model.deleteArticle(view.getSavesSelection());
+        localModel.deleteArticle(view.getSavesSelection());
     }
 
     @Override
     public void onEventSaveChanges() {
-        model.saveArticleChanges(view.getSavesSelection(),view.getDisplayedArticle());
+        localModel.saveArticleChanges(view.getSavesSelection(),view.getDisplayedArticle());
     }
 
     @Override
     public void onEventSaveArticle() {
-        model.saveArticle(view.getSearchTitle(), view.getSearchedContent());
+        localModel.saveArticle(view.getSearchTitle(), view.getSearchedContent());
     }
 
     @Override
     public void onEventLoadArticle() {
-        model.getExtract(view.getSearchSelection());
+        searchModel.getExtract(view.getSearchSelection());
     }
 
     @Override
     public void onEventChooseOnlyIntro() {
-        model.setSearchMode(view.getOnlyIntro());
+        searchModel.setSearchMode(view.getOnlyIntro());
     }
 
     private void initListeners(){
-        model.addListener(new CatalogModelListener() {
+        /*model.addListener(new CatalogModelListener() {
             @Override
             public void didSearchOnWiki() {
-                ArrayList<SearchResult> titles = model.getPreliminaryResults();
+                ArrayList<SearchResult> titles = searchModel.getPreliminaryResults();
                 view.displaySearchOptions(titles);
             }
 
@@ -72,7 +74,7 @@ public class CatalogPresenterImpl implements CatalogPresenter{
             public void didSaveLocally() {
                 String[] titles = model.getStoredTitles();
                 view.setStoredList(titles);
-                view.errorMessage("Saved succesfully!");
+                view.displayMessage("Saved succesfully!");
             }
 
             @Override
@@ -82,14 +84,52 @@ public class CatalogPresenterImpl implements CatalogPresenter{
 
             @Override
             public void didThrowException() {
-                view.errorMessage(model.getErrorMessage());
+                view.displayMessage(model.getErrorMessage());
             }
 
             @Override
             public void didDeleteSave() {
                 view.setStoredContent("");
                 view.setStoredList(model.getStoredTitles());
-                view.errorMessage("Deleted succesfully!");
+                view.displayMessage("Deleted succesfully!");
+            }
+        });*/
+        localModel.addListener(new CatalogLocalModelListener() {
+
+            @Override
+            public void didSaveLocally() {
+                String[] titles = localModel.getStoredTitles();
+                view.setStoredList(titles);
+                view.displayMessage("Saved succesfully!");
+            }
+
+            @Override
+            public void didThrowException() {
+                view.displayMessage(localModel.getErrorMessage());
+            }
+
+            @Override
+            public void didDeleteSave() {
+                view.setStoredContent("");
+                view.setStoredList(localModel.getStoredTitles());
+                view.displayMessage("Deleted succesfully!");
+            }
+        });
+        searchModel.addListener(new CatalogWikiSearchModelListener() {
+            @Override
+            public void didSearchOnWiki() {
+                ArrayList<SearchResult> titles = searchModel.getPreliminaryResults();
+                view.displaySearchOptions(titles);
+            }
+
+            @Override
+            public void didSearchExtract() {
+                view.setSearchedContent(searchModel.getExtract2());
+            }
+
+            @Override
+            public void didThrowException() {
+                view.displayMessage(searchModel.getErrorMessage());
             }
         });
     }

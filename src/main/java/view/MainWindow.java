@@ -27,5 +27,5 @@ public interface MainWindow {
 
     boolean getOnlyIntro();//Retorna true si tiene que traer solo la intro
 
-    void errorMessage(String errorMessage);
+    void displayMessage(String errorMessage);
 }

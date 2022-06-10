@@ -13,7 +13,7 @@ public class DataBase {
             if (connection != null) {
 
                 DatabaseMetaData meta = connection.getMetaData();
-                System.out.println("The driver name is " + meta.getDriverName());
+                //System.out.println("The driver name is " + meta.getDriverName());
                 //System.out.println("A new database has been created.");
 
                 Statement statement = connection.createStatement();
