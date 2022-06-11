@@ -1,12 +1,8 @@
-package model;
+package model.listeners;
 
-public interface CatalogModelListener {
+public interface CatalogWikiSearchModelListener {
 
     void didSearchOnWiki();//Esto lo uso para el preliminar result
-
-    void didSaveLocally();//tocar el boton de guardar localmente
-
-    void didDeleteSave();
 
     void didSearchExtract();
 

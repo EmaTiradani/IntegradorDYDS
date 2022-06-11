@@ -1,5 +1,7 @@
 package model;
 
+import model.listeners.CatalogLocalModelListener;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;

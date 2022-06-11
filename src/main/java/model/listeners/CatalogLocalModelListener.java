@@ -1,4 +1,4 @@
-package model;
+package model.listeners;
 
 public interface CatalogLocalModelListener {
     void didSaveLocally();//tocar el boton de guardar localmente

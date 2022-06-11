@@ -18,7 +18,11 @@
             <preferred-size width="200" height="200"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-16777216"/>
+          <enabled value="true"/>
+          <font name="Arial"/>
+        </properties>
         <border type="none"/>
         <children>
           <grid id="563e4" binding="storagePanel" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -52,6 +56,7 @@
                     <properties>
                       <editable value="true"/>
                       <enabled value="true"/>
+                      <font name="Arial"/>
                     </properties>
                   </component>
                 </children>
@@ -93,6 +98,7 @@
                     <constraints/>
                     <properties>
                       <editable value="false"/>
+                      <font name="Arial"/>
                     </properties>
                     <clientProperties>
                       <html.disable class="java.lang.Boolean" value="false"/>
@@ -121,6 +127,7 @@
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <font name="Dialog"/>
                   <text value="Search"/>
                 </properties>
               </component>
@@ -129,6 +136,7 @@
                   <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <font name="Arial"/>
                   <text value="Full Article"/>
                 </properties>
               </component>

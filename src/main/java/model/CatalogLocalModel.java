@@ -1,5 +1,7 @@
 package model;
 
+import model.listeners.CatalogLocalModelListener;
+
 public interface CatalogLocalModel {
 
     void addListener(CatalogLocalModelListener listener);

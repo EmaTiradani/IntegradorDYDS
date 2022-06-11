@@ -1,13 +1,15 @@
 package presenter;
 
 import model.*;
+import model.listeners.CatalogLocalModelListener;
+import model.listeners.CatalogWikiSearchModelListener;
 import view.MainWindow;
 import view.MainWindowImpl;
 import java.util.ArrayList;
 
 public class CatalogPresenterImpl implements CatalogPresenter{
 
-    private CatalogModel model;
+    //private CatalogModel model;
     private CatalogLocalModel localModel;
     private CatalogWikiSearchModel searchModel;
     private MainWindow view;
@@ -16,8 +18,8 @@ public class CatalogPresenterImpl implements CatalogPresenter{
         this.view = new MainWindowImpl(this);
         this.searchModel = new CatalogWikiSearchModelImpl();
         this.localModel = new CatalogLocalModelImpl();
-        this.model = new CatalogModelImpl();
-        this.view.setStoredList(model.getStoredTitles());
+        //this.model = new CatalogModelImpl();
+        this.view.setStoredList(localModel.getStoredTitles());
     }
 
     @Override

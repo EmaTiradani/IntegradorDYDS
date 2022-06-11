@@ -1,5 +1,7 @@
 package model;
 
+import model.listeners.CatalogWikiSearchModelListener;
+
 import java.util.ArrayList;
 
 public interface CatalogWikiSearchModel {

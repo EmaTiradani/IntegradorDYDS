@@ -30,30 +30,26 @@ public class WikiSearch {//TODO interfacear esta clase para cumplir con ISP
     public ArrayList<SearchResult> search(String title) throws IOException {
 
         ArrayList<SearchResult> results = new ArrayList<>();
-        //try{
-            Response<String> callForSearchResponse;
-            callForSearchResponse = searchAPI.searchForTerm(title + " articletopic:\"food-and-drink\"").execute();
+        Response<String> callForSearchResponse;
+        callForSearchResponse = searchAPI.searchForTerm(title + " articletopic:\"food-and-drink\"").execute();
 
-            System.out.println("JSON " + callForSearchResponse.body());
+        //System.out.println("JSON " + callForSearchResponse.body());
 
-            Gson gson = new Gson();
-            JsonObject jobj = gson.fromJson(callForSearchResponse.body(), JsonObject.class);
-            JsonObject query = jobj.get("query").getAsJsonObject();
-            //Iterator<JsonElement> resultIterator = query.get("search").getAsJsonArray().iterator();
-            JsonArray jsonResults = query.get("search").getAsJsonArray();
+        Gson gson = new Gson();
+        JsonObject jobj = gson.fromJson(callForSearchResponse.body(), JsonObject.class);
+        JsonObject query = jobj.get("query").getAsJsonObject();
+        JsonArray jsonResults = query.get("search").getAsJsonArray();
 
-            for (JsonElement je : jsonResults) {
-                JsonObject searchResult = je.getAsJsonObject();
-                String searchResultTitle = searchResult.get("title").getAsString();
-                String searchResultPageId = searchResult.get("pageid").getAsString();
-                String searchResultSnippet = searchResult.get("snippet").getAsString();
+        for (JsonElement je : jsonResults) {
+            JsonObject searchResult = je.getAsJsonObject();
+            String searchResultTitle = searchResult.get("title").getAsString();
+            String searchResultPageId = searchResult.get("pageid").getAsString();
+            String searchResultSnippet = searchResult.get("snippet").getAsString();
 
-                SearchResult sr = new SearchResult(searchResultTitle, searchResultPageId, searchResultSnippet);
-                results.add(sr);
-            }
-        /*}catch (IOException e1) {
-            e1.printStackTrace();
-        }*/
+            SearchResult sr = new SearchResult(searchResultTitle, searchResultPageId, searchResultSnippet);
+            results.add(sr);
+        }
+
         return results;
     }
 
@@ -85,7 +81,7 @@ public class WikiSearch {//TODO interfacear esta clase para cumplir con ISP
         } else {
             extract = "<h1>" + searchResult.title + "</h1>";
             extract += searchResultExtract2.getAsString().replace("\\n", "\n");
-            extract = textToHtml(extract);
+            //extract = textToHtml(extract);
 
             //TODO Falta algo?
             if(enableSearchFullArticle){
@@ -96,21 +92,22 @@ public class WikiSearch {//TODO interfacear esta clase para cumplir con ISP
         return extract;
     }
 
-    public static String textToHtml(String text) {
+    /*public static String textToHtml(String text) {
 
         StringBuilder builder = new StringBuilder();
 
         //builder.append("<font face=\"arial\">");
 
-        String fixedText = text
-                .replace("'", "`"); //Replace to avoid SQL errors, we will have to find a workaround..
+        //String fixedText = text
+        //       .replace("'", "`"); //Replace to avoid SQL errors, we will have to find a workaround..
 
-        builder.append(fixedText);
+        //builder.append(fixedText);
+        builder.append(text);
 
-        builder.append("</font>");
+        //builder.append("</font>");
 
         return builder.toString();
-    }
+    }*/
 
     public void toggleFullArticle(boolean fullArticle){
         enableSearchFullArticle = fullArticle;

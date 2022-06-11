@@ -1,5 +1,7 @@
 package model;
 
+import model.listeners.CatalogWikiSearchModelListener;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
