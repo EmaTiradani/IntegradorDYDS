@@ -16,7 +16,7 @@ import java.util.*;
 
 public class WikiSearch {//TODO interfacear esta clase para cumplir con ISP
 
-    boolean enableSearchFullArticle = false;
+    protected boolean enableSearchFullArticle = false;
 
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://en.wikipedia.org/w/")

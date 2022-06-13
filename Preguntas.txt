@@ -1,6 +1,6 @@
-1. No funcionan los listeners del mock modelo
-2. Esta bien que yo para disparar la interaccion utilice los metodos del presenter? Sino como hago para disparar los action listeners de la vista?
-3. Los tests, tengo que ir chequeando todos los valores(incluyendo los de la database)?
-4. Para chequear valores, puedo usar el verify para ver si se llamo a metodox(valor) con cierto valor o tengo que obtener el valor con un metodo(get)?
-5. Puedo hacer los test negativos y positivos en uno mismo? O deberia hacerlo en dos metodos separados?
-6. Tendria que hacer un tester que testee multiples funcionalidades? Es decir, testear que busco algo, lo guardo, lo edito y luego lo elimino.
+1. No funcionan los listeners del mock modelo -> xd
+2. Esta bien que yo para disparar la interaccion utilice los metodos del presenter? Sino como hago para disparar los action listeners de la vista? Si, esta bien usar los metodos del presenter
+3. Los tests, tengo que ir chequeando todos los valores(incluyendo los de la database)? No, solamente el input y el output
+4. Para chequear valores, puedo usar el verify para ver si se llamo a metodox(valor) con cierto valor o tengo que obtener el valor con un metodo(get)?no es necesario
+5. Puedo hacer los test negativos y positivos en uno mismo? O deberia hacerlo en dos metodos separados? Separados
+6. Tendria que hacer un tester que testee multiples funcionalidades? Es decir, testear que busco algo, lo guardo, lo edito y luego lo elimino. Nop

@@ -14,6 +14,7 @@ import view.MainWindowImpl;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -21,28 +22,24 @@ import static org.mockito.Mockito.*;
 public class IntegrationTest {
 
     CatalogPresenter presenter;
-
-    @Mock
-    CatalogWikiSearchModelImpl searchModel;
-    @Mock
-    CatalogLocalModelImpl localModel;
-
-    @Mock
-    MainWindowImpl view;
-
-    @Mock
     WikiSearch searcher;
+    CatalogWikiSearchModel searchModel;
+    CatalogLocalModel localModel;
+    ViewStub view;
 
     @Before
     public void setUp() throws Exception{
+        localModel = new CatalogLocalModelImpl();
+        searchModel = new CatalogWikiSearchModelImpl();
+        searcher = new WikiSearchStub();
         searchModel.setSearchEngine(searcher);
         presenter = new CatalogPresenterImpl(localModel, searchModel);
+        view = new ViewStub(presenter);
         presenter.setView(view);
     }
 
-    @Test(timeout = 500)
+    @Test(timeout = 10000)
     public void testSearchAndShowPreliminaryResults() throws IOException {
-        when(view.getSearchTitle()).thenReturn("Pizza");
         ArrayList<SearchResult> results = new ArrayList<>();
         SearchResult result1 = new SearchResult("First","1", "Snippet");
         SearchResult result2 = new SearchResult("Second","2", "Snippet");
@@ -50,17 +47,19 @@ public class IntegrationTest {
         results.add(result1);
         results.add(result2);
         results.add(result3);
-        when(searcher.search("Pizza")).thenReturn(results);
-
+        view.setSearchTitle("Pizza");
         presenter.onEventSearch();
+        ArrayList<SearchResult> newResults = view.searchOptions;
+        for(int i = 0; i<3; i++){
+            assertTrue(newResults.get(i).pageID.equals(results.get(i).pageID));
+            assertTrue(newResults.get(i).pageID.equals(results.get(i).pageID));
+            assertTrue(newResults.get(i).pageID.equals(results.get(i).pageID));
+        }
 
-        verify(searchModel).searchOnWiki(any()); //Esto funciona
-        //Notifico al listener notifySearchListener() -> didSearchOnWiki() y nunca le avisa al presentador.
-        verify(view).displaySearchOptions(results); //TODO Por que no lo llama nunca? no funciona ni con el "any()"
     }
 
     @Test(timeout = 500)
-    public void testShowSavedArticle(){//TODO este anda, pero porque no uso los listeners
+    public void testShowSavedArticle(){
         when(view.getSavesSelection()).thenReturn("Title");
         when(localModel.getSave("Title")).thenReturn("Saved body");
 

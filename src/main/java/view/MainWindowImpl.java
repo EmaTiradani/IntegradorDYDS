@@ -10,20 +10,20 @@ import java.util.ArrayList;
 
 public class MainWindowImpl implements MainWindow{
 
-    private JTextField searchTitle;
-    private JPanel contentPane;
-    private JTextPane searchedArticleBody;
-    private JButton saveLocallyButton;
-    private JTabbedPane tabbedPane1;
-    private JPanel searchPanel;
-    private JPanel storagePanel;
-    private JComboBox<Object> storedArticlesTitles;
-    private JTextPane storedArticleBody;
-    private JButton deleteButton;
-    private JButton searchButton;
-    private JButton saveChangesButton;
-    private JCheckBox onlyIntroCheckBox;
-    private JPopupMenu searchOptionsMenu;
+    protected JTextField searchTitle;
+    protected JPanel contentPane;
+    protected JTextPane searchedArticleBody;
+    protected JButton saveLocallyButton;
+    protected JTabbedPane tabbedPane1;
+    protected JPanel searchPanel;
+    protected JPanel storagePanel;
+    protected JComboBox<Object> storedArticlesTitles;
+    protected JTextPane storedArticleBody;
+    protected JButton deleteButton;
+    protected JButton searchButton;
+    protected JButton saveChangesButton;
+    protected JCheckBox onlyIntroCheckBox;
+    protected JPopupMenu searchOptionsMenu;
 
     private SearchResult selected;
     private CatalogPresenter catalogPresenter;

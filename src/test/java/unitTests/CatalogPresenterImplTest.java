@@ -36,10 +36,6 @@ public class CatalogPresenterImplTest {
 
     @Test
     public void onEventSearchTest() {
-        /*
-        when(searchModel.getExtract(new SearchResult("Fideos", "1234", "Holisxd"))).thenReturn("Holis");
-        presenter.onEventLoadArticle();*/
-        //when(searchModel.searchOnWiki("SearchThis")).thenReturn;
         presenter.onEventSearch();
         verify(searchModel).searchOnWiki(any());
         verify(view).getSearchTitle();
@@ -60,7 +56,6 @@ public class CatalogPresenterImplTest {
 
     @Test
     public void onEventSaveChanges() {
-        //when(view.getSavesSelection()).thenReturn("Pizza");
         presenter.onEventSaveChanges();
         verify(view).getSavesSelection();
         verify(view).getDisplayedArticle();
@@ -69,8 +64,6 @@ public class CatalogPresenterImplTest {
 
     @Test
     public void onEventSaveArticle() {
-        //when(view.getSearchTitle()).thenReturn("Pizza");
-        //when(view.getSearchedContent()).thenReturn("Pizza body");
 
         presenter.onEventSaveArticle();
         verify(view).getSearchTitle();
@@ -80,13 +73,6 @@ public class CatalogPresenterImplTest {
 
     @Test
     public void onEventLoadArticle() {
-        /*SearchResult searchResultDummy = new SearchResult("Fideos", "1234", "Holis");
-
-        when(searcher.getExtract(any())).thenReturn("This");
-        when(view.getSearchSelection()).thenReturn(searchResultDummy);
-        when(searchModel.searchExtract(any())).thenReturn("This");
-        presenter.onEventLoadArticle();
-        assertEquals(searchModel.getExtract(),"This");*/
         presenter.onEventLoadArticle();
         verify(searchModel).searchExtract(any());
         verify(view).getSearchSelection();
@@ -94,11 +80,6 @@ public class CatalogPresenterImplTest {
 
     @Test
     public void onEventChooseOnlyIntro() {
-        /*boolean actual = searcher.getArticleMode();
-        when(view.getOnlyIntro()).thenReturn(true);
-        presenter.onEventChooseOnlyIntro();
-        boolean afterChange = searcher.getArticleMode();
-        assertNotEquals(actual, afterChange);*/
         when(view.getOnlyIntro()).thenReturn(true);
         presenter.onEventChooseOnlyIntro();
         verify(searchModel).setSearchMode(true);

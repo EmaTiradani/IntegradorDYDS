@@ -65,37 +65,6 @@ public class CatalogPresenterImpl implements CatalogPresenter{
     }
 
     private void initListeners(){
-        /*model.addListener(new CatalogModelListener() {
-            @Override
-            public void didSearchOnWiki() {
-                ArrayList<SearchResult> titles = searchModel.getPreliminaryResults();
-                view.displaySearchOptions(titles);
-            }
-
-            @Override
-            public void didSaveLocally() {
-                String[] titles = model.getStoredTitles();
-                view.setStoredList(titles);
-                view.displayMessage("Saved succesfully!");
-            }
-
-            @Override
-            public void didSearchExtract() {
-                view.setSearchedContent(model.getExtract2());
-            }
-
-            @Override
-            public void didThrowException() {
-                view.displayMessage(model.getErrorMessage());
-            }
-
-            @Override
-            public void didDeleteSave() {
-                view.setStoredContent("");
-                view.setStoredList(model.getStoredTitles());
-                view.displayMessage("Deleted succesfully!");
-            }
-        });*/
         localModel.addListener(new CatalogLocalModelListener() {
 
             @Override
