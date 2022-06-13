@@ -38,8 +38,8 @@ public class IntegrationTest {
 
     @Before
     public void setUp() throws Exception{
-        presenter = new CatalogPresenterImpl(localModel, searchModel);
         searchModel.setSearchEngine(searcher);
+        presenter = new CatalogPresenterImpl(localModel, searchModel);
         presenter.setView(view);
     }
 
@@ -63,7 +63,7 @@ public class IntegrationTest {
     }
 
     @Test(timeout = 500)
-    public void testShowSavedArticle(){
+    public void testShowSavedArticle(){//TODO este anda, pero porque no uso los listeners
         when(view.getSavesSelection()).thenReturn("Title");
         when(localModel.getSave("Title")).thenReturn("Saved body");
 

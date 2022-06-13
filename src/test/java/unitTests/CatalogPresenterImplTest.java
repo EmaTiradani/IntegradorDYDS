@@ -86,7 +86,7 @@ public class CatalogPresenterImplTest {
         when(view.getSearchSelection()).thenReturn(searchResultDummy);
         when(searchModel.searchExtract(any())).thenReturn("This");
         presenter.onEventLoadArticle();
-        assertEquals(searchModel.getExtract(),"This");//TODO no me retorna nada el primer parametro*/
+        assertEquals(searchModel.getExtract(),"This");*/
         presenter.onEventLoadArticle();
         verify(searchModel).searchExtract(any());
         verify(view).getSearchSelection();
@@ -99,8 +99,14 @@ public class CatalogPresenterImplTest {
         presenter.onEventChooseOnlyIntro();
         boolean afterChange = searcher.getArticleMode();
         assertNotEquals(actual, afterChange);*/
+        when(view.getOnlyIntro()).thenReturn(true);
         presenter.onEventChooseOnlyIntro();
-        verify(searchModel).setSearchMode(anyBoolean());
-        verify(view).getOnlyIntro();
+        verify(searchModel).setSearchMode(true);
+
+        when(view.getOnlyIntro()).thenReturn(false);
+        presenter.onEventChooseOnlyIntro();
+        verify(searchModel).setSearchMode(false);
+
+        verify(view, times(2)).getOnlyIntro();
     }
 }

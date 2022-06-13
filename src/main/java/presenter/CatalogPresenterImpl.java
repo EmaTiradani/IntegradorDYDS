@@ -34,7 +34,7 @@ public class CatalogPresenterImpl implements CatalogPresenter{
     }
 
     @Override
-    public void onEventShowSaved(){
+    public void onEventShowSaved(){//TODO esto esta mal, no? Deberia esperar a que el modelo avise con el listener
         String body = localModel.getSave(view.getSavesSelection());
         view.setStoredContent(body);
     }
