@@ -1,9 +1,6 @@
 package integracion;
 
-import model.CatalogLocalModelImpl;
-import model.CatalogWikiSearchModelImpl;
-import model.SearchResult;
-import model.WikiSearch;
+import model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -117,6 +114,9 @@ public class IntegrationTest {
 
     @Test(timeout = 500)
     public void loadSelectedArticleBody(){
+        SearchResult result = new SearchResult("Pizza","1", "Snippet");
+        when(view.getSearchSelection()).thenReturn(result);
+        //when() //TODO mockeo la database para obtener un resultado? O primero le guardo uno?
 
     }
 
