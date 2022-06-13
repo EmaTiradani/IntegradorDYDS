@@ -92,6 +92,13 @@ public class WikiSearch {//TODO interfacear esta clase para cumplir con ISP
         return extract;
     }
 
+    public void toggleFullArticle(boolean fullArticle){
+        enableSearchFullArticle = fullArticle;
+    }
+
+    public boolean getArticleMode() {
+        return enableSearchFullArticle;
+    }
     /*public static String textToHtml(String text) {
 
         StringBuilder builder = new StringBuilder();
@@ -109,7 +116,5 @@ public class WikiSearch {//TODO interfacear esta clase para cumplir con ISP
         return builder.toString();
     }*/
 
-    public void toggleFullArticle(boolean fullArticle){
-        enableSearchFullArticle = fullArticle;
-    }
+
 }

@@ -1,8 +1,13 @@
 package presenter;
 
+import model.WikiSearch;
+import view.MainWindow;
+
 public interface CatalogPresenter {
 
     void start();
+
+    void setView(MainWindow view);
 
     void onEventSearch();
 

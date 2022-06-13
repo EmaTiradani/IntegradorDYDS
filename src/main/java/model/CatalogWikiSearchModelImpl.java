@@ -24,11 +24,6 @@ public class CatalogWikiSearchModelImpl implements CatalogWikiSearchModel{
     }
 
     @Override
-    public String getExtract2() {
-        return extract;
-    }
-
-    @Override
     public void searchOnWiki(String title) {
         try {
             results = searcher.search(title);
@@ -41,14 +36,17 @@ public class CatalogWikiSearchModelImpl implements CatalogWikiSearchModel{
     }
 
     @Override
-    public String searchExtract(SearchResult searchResult) {
-        extract = searcher.getExtract(searchResult);
-        notifySelectSearchListener();
+    public void setSearchEngine(WikiSearch searcher) {
+        this.searcher = searcher;
+    }
+
+    @Override
+    public String getExtract() {
         return extract;
     }
 
     @Override
-    public String getExtract(SearchResult result){
+    public String searchExtract(SearchResult result){
         extract = searcher.getExtract(result);
         notifySelectSearchListener();
         return extract;
@@ -57,6 +55,11 @@ public class CatalogWikiSearchModelImpl implements CatalogWikiSearchModel{
     @Override
     public void setSearchMode(boolean onlyIntro) {
         searcher.toggleFullArticle(onlyIntro);
+    }
+
+    @Override
+    public boolean getSearchMode() {
+        return searcher.getArticleMode();
     }
 
     @Override

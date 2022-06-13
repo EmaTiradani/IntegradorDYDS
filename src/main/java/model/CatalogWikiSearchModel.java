@@ -10,15 +10,19 @@ public interface CatalogWikiSearchModel {
 
     String getErrorMessage();
 
-    String getExtract2();
+    String getExtract();
 
     void searchOnWiki(String title);
 
+    //String searchExtract(SearchResult searchResult);
+
+    void setSearchEngine(WikiSearch searcher);
+
     String searchExtract(SearchResult searchResult);
 
-    String getExtract(SearchResult searchResult);
-
     void setSearchMode(boolean onlyIntro);
+
+    boolean getSearchMode();
 
     ArrayList<SearchResult> getPreliminaryResults();
 }

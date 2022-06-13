@@ -4,28 +4,28 @@ import model.*;
 import model.listeners.CatalogLocalModelListener;
 import model.listeners.CatalogWikiSearchModelListener;
 import view.MainWindow;
-import view.MainWindowImpl;
 import java.util.ArrayList;
 
 public class CatalogPresenterImpl implements CatalogPresenter{
 
-    //private CatalogModel model;
     private CatalogLocalModel localModel;
     private CatalogWikiSearchModel searchModel;
     private MainWindow view;
 
-    public CatalogPresenterImpl(){
-        this.view = new MainWindowImpl(this);
-        this.searchModel = new CatalogWikiSearchModelImpl();
-        this.localModel = new CatalogLocalModelImpl();
-        //this.model = new CatalogModelImpl();
-        this.view.setStoredList(localModel.getStoredTitles());
+    public CatalogPresenterImpl(CatalogLocalModel localModel, CatalogWikiSearchModel searchModel){
+        this.localModel = localModel;
+        this.searchModel = searchModel;
+        initListeners();
     }
 
     @Override
     public void start() {
-        initListeners();
+        this.view.setStoredList(localModel.getStoredTitles());
         view.showView();
+    }
+
+    public void setView(MainWindow view){
+        this.view = view;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class CatalogPresenterImpl implements CatalogPresenter{
 
     @Override
     public void onEventLoadArticle() {
-        searchModel.getExtract(view.getSearchSelection());
+        searchModel.searchExtract(view.getSearchSelection());
     }
 
     @Override
@@ -126,7 +126,7 @@ public class CatalogPresenterImpl implements CatalogPresenter{
 
             @Override
             public void didSearchExtract() {
-                view.setSearchedContent(searchModel.getExtract2());
+                view.setSearchedContent(searchModel.getExtract());
             }
 
             @Override

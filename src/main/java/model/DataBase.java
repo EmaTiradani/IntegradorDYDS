@@ -67,6 +67,7 @@ public class DataBase {
 
     public static void saveInfo(String title, String extract) throws SQLException {
         String formattedTitle = title.replace("'", "`");
+        String formattedExtract = extract.replace("'", "`");
 
         Connection connection = null;
         try
@@ -77,7 +78,7 @@ public class DataBase {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);
 
-            statement.executeUpdate("replace into catalog values(null, '"+ formattedTitle + "', '"+ extract + "', 1)");
+            statement.executeUpdate("replace into catalog values(null, '"+ formattedTitle + "', '"+ formattedExtract + "', 1)");
 
         }
         catch(SQLException e)

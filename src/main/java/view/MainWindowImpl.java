@@ -91,7 +91,7 @@ public class MainWindowImpl implements MainWindow{
 
     @Override
     public SearchResult getSearchSelection() {
-        return selected;//todo feo
+        return selected;
     }
 
     @Override
