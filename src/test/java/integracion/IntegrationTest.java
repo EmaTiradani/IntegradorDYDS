@@ -111,27 +111,24 @@ public class IntegrationTest {
         }
 
         localViewStub.setStoredList(localModel.getStoredTitles());
-        localViewStub.setSavesSelection("Save changes to this");
-        localViewStub.setStoredContent();
+        localViewStub.setSavesSelection("Save changes to this article");
+        localViewStub.setStoredContent("Changed body");
 
         localPresenter.onEventSaveChanges();
 
-        verify(localModel).saveArticleChanges("Save this", "Modified body");//TODO Esto llama al listener y el listener a los 2 metodos de abajo(que nunca son llamados)
-        //verify(view).setStoredList(any());
-        verify(localViewStub).displayMessage(any());
-
+        assertEquals("Changed body", DataBase.getExtract("Save changes to this article"));
+        //TODO esta bien o deberia seleccionar "Save hanges to this article" en el combobox y tiene que quedar igual el body?
     }
 
     @Test(timeout = 500)
     public void testSaveArticle(){
-        when(searchViewStub.getSearchTitle()).thenReturn("Save this");
-        when(searchViewStub.getSearchedContent()).thenReturn("Body to save");
+
+        searchViewStub.setSearchTitle("Save this");
+        searchViewStub.setSearchedContent("Body to save");
 
         searchPresenter.onEventSaveArticle();
 
-        verify(localModel).saveArticle("Save this", "Body to save");
-        //verify(view).setStoredContent(any());
-        verify(searchViewStub).displayMessage(any());
+        assertEquals("Body to save", DataBase.getExtract("Save this"));
 
     }
 
