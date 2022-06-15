@@ -82,10 +82,15 @@ public class CatalogLocalModelImpl implements CatalogLocalModel{
         }
     }
 
+    private void notifyFoundSave(){
+        for(CatalogLocalModelListener listener: listeners){
+            listener.foundSave();
+        }
+    }
+
     private void notifyError(){
         for(CatalogLocalModelListener listener: listeners) {
             listener.didThrowException();
         }
-
     }
 }

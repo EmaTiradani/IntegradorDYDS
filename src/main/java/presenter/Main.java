@@ -1,20 +1,35 @@
 package presenter;
 
-import model.CatalogLocalModelImpl;
-import model.CatalogWikiSearchModelImpl;
-import model.DataBase;
-import view.MainWindow;
-import view.MainWindowImpl;
+import model.*;
+import view.*;
 
 public class Main {
 
     public static void main(String[] args) {
-
-        CatalogPresenter presenter = new CatalogPresenterImpl(new CatalogLocalModelImpl(), new CatalogWikiSearchModelImpl());
-        MainWindow view = new MainWindowImpl(presenter);
-        presenter.setView(view);
-
         DataBase.loadDatabase();
-        presenter.start();
+
+
+
+        CatalogLocalModel localModel = new CatalogLocalModelImpl();
+        CatalogWikiSearchModel searchModel = new CatalogWikiSearchModelImpl();
+
+        searchModel.setSearchModel(localModel);
+
+        CatalogLocalPresenter localPresenter = new CatalogLocalPresenterImpl(localModel);
+        LocalView localView = new LocalViewImpl(localPresenter);
+        localPresenter.setView(localView);
+
+        CatalogSearchPresenter searchPresenter = new CatalogSearchPresenterImpl(searchModel);
+        SearchView searchView = new SearchViewImpl(searchPresenter);
+        searchPresenter.setView(searchView);
+
+        MainFrame frame = new MainFrameImpl();
+        frame.setLocalPanel(localView.getPanel());
+        frame.setSearchPanel(searchView.getPanel());
+        frame.showView();
+
+        localView.start();
+        searchPresenter.start();
+        localPresenter.start();
     }
 }

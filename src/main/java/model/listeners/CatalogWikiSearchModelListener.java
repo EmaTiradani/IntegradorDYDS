@@ -7,4 +7,5 @@ public interface CatalogWikiSearchModelListener {
     void didSearchExtract();
 
     void didThrowException();//Cuando algo lanza una excepcion
+
 }

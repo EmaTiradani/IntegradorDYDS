@@ -6,15 +6,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import presenter.CatalogPresenter;
-import presenter.CatalogPresenterImpl;
-import view.MainWindowImpl;
+import presenter.CatalogLocalPresenter;
+import presenter.CatalogLocalPresenterImpl;
+import presenter.CatalogSearchPresenter;
+import presenter.CatalogSearchPresenterImpl;
+import view.LocalViewImpl;
+import view.SearchViewImpl;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CatalogPresenterImplTest {
 
-    CatalogPresenter presenter;
+    CatalogLocalPresenter localPresenter;
+    CatalogSearchPresenter searchPresenter;
 
     @Mock
     CatalogWikiSearchModelImpl searchModel;
@@ -22,72 +26,77 @@ public class CatalogPresenterImplTest {
     CatalogLocalModelImpl localModel;
 
     @Mock
-    MainWindowImpl view;
+    SearchViewImpl searchView;
+
+    @Mock
+    LocalViewImpl localView;
 
     @Mock
     WikiSearch searcher;
 
     @Before
     public void setUp() throws Exception{
-        presenter = new CatalogPresenterImpl(localModel, searchModel);
+        localPresenter = new CatalogLocalPresenterImpl(localModel);
+        searchPresenter = new CatalogSearchPresenterImpl(searchModel);
         searchModel.setSearchEngine(searcher);
-        presenter.setView(view);
+        localPresenter.setView(localView);
+        searchPresenter.setView(searchView);
     }
 
     @Test
     public void onEventSearchTest() {
-        presenter.onEventSearch();
+        searchPresenter.onEventSearch();
         verify(searchModel).searchOnWiki(any());
-        verify(view).getSearchTitle();
+        verify(searchView).getSearchTitle();
     }
 
     @Test
     public void onEventShowSavedTest() {
-        presenter.onEventShowSaved();
-        verify(view).setStoredContent(any());
+        localPresenter.onEventShowSaved();
+        verify(localView).setStoredContent(any());
     }
 
     @Test
     public void onEventDeleteArticleTest() {
-        presenter.onEventDeleteArticle();
-        verify(view).getSavesSelection();
+        localPresenter.onEventDeleteArticle();
+        verify(localView).getSavesSelection();
         verify(localModel).deleteArticle(any());
     }
 
     @Test
     public void onEventSaveChanges() {
-        presenter.onEventSaveChanges();
-        verify(view).getSavesSelection();
-        verify(view).getDisplayedArticle();
+        localPresenter.onEventSaveChanges();
+        verify(localView).getSavesSelection();
+        verify(localView).getDisplayedArticle();
         verify(localModel).saveArticleChanges(any(),any());
     }
 
     @Test
     public void onEventSaveArticle() {
 
-        presenter.onEventSaveArticle();
-        verify(view).getSearchTitle();
-        verify(view).getSearchedContent();
-        verify(localModel).saveArticle(view.getSearchTitle(),view.getSearchedContent());
+        searchPresenter.onEventSaveArticle();
+        verify(searchView).getSearchTitle();
+        verify(searchView).getSearchedContent();
+        verify(searchModel).saveArticle(searchView.getSearchTitle(),searchView.getSearchedContent());
     }
 
     @Test
     public void onEventLoadArticle() {
-        presenter.onEventLoadArticle();
+        searchPresenter.onEventLoadArticle();
         verify(searchModel).searchExtract(any());
-        verify(view).getSearchSelection();
+        verify(searchView).getSearchSelection();
     }
 
     @Test
     public void onEventChooseOnlyIntro() {
-        when(view.getOnlyIntro()).thenReturn(true);
-        presenter.onEventChooseOnlyIntro();
+        when(searchView.getOnlyIntro()).thenReturn(true);
+        searchPresenter.onEventChooseOnlyIntro();
         verify(searchModel).setSearchMode(true);
 
-        when(view.getOnlyIntro()).thenReturn(false);
-        presenter.onEventChooseOnlyIntro();
+        when(searchView.getOnlyIntro()).thenReturn(false);
+        searchPresenter.onEventChooseOnlyIntro();
         verify(searchModel).setSearchMode(false);
 
-        verify(view, times(2)).getOnlyIntro();
+        verify(searchView, times(2)).getOnlyIntro();
     }
 }

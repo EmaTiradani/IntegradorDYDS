@@ -4,12 +4,9 @@ import model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import presenter.CatalogPresenter;
-import presenter.CatalogPresenterImpl;
-import view.MainWindowImpl;
+import presenter.*;
+import view.LocalView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,11 +18,13 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class IntegrationTest {
 
-    CatalogPresenter presenter;
+    CatalogSearchPresenter searchPresenter;
+    CatalogLocalPresenter localPresenter;
     WikiSearch searcher;
     CatalogWikiSearchModel searchModel;
     CatalogLocalModel localModel;
-    ViewStub view;
+    SearchViewStub searchViewStub;
+    LocalViewStub localViewStub;
 
     @Before
     public void setUp() throws Exception{
@@ -33,12 +32,17 @@ public class IntegrationTest {
         searchModel = new CatalogWikiSearchModelImpl();
         searcher = new WikiSearchStub();
         searchModel.setSearchEngine(searcher);
-        presenter = new CatalogPresenterImpl(localModel, searchModel);
-        view = new ViewStub(presenter);
-        presenter.setView(view);
+        searchPresenter = new CatalogSearchPresenterImpl(searchModel);
+        localPresenter = new CatalogLocalPresenterImpl(localModel);
+        //presenter = new CatalogPresenterImpl(localModel, searchModel);
+        searchViewStub = new SearchViewStub(searchPresenter);
+        //presenter.setView(view);
+        localViewStub = new LocalViewStub(localPresenter);
+
+        localPresenter.setView(localViewStub);
     }
 
-    @Test(timeout = 10000)
+    @Test(timeout = 500)
     public void testSearchAndShowPreliminaryResults() throws IOException {
         ArrayList<SearchResult> results = new ArrayList<>();
         SearchResult result1 = new SearchResult("First","1", "Snippet");
@@ -47,9 +51,9 @@ public class IntegrationTest {
         results.add(result1);
         results.add(result2);
         results.add(result3);
-        view.setSearchTitle("Pizza");
-        presenter.onEventSearch();
-        ArrayList<SearchResult> newResults = view.searchOptions;
+        searchViewStub.setSearchTitle("Pizza");
+        searchPresenter.onEventSearch();
+        ArrayList<SearchResult> newResults = localViewStub.searchOptions;
         for(int i = 0; i<3; i++){
             assertTrue(newResults.get(i).pageID.equals(results.get(i).pageID));
             assertTrue(newResults.get(i).pageID.equals(results.get(i).pageID));
@@ -60,79 +64,74 @@ public class IntegrationTest {
 
     @Test(timeout = 500)
     public void testShowSavedArticle(){
-        when(view.getSavesSelection()).thenReturn("Title");
+        when(localViewStub.getSavesSelection()).thenReturn("Title");
         when(localModel.getSave("Title")).thenReturn("Saved body");
 
-        presenter.onEventShowSaved();
+        localPresenter.onEventShowSaved();
 
         verify(localModel).getSave("Title");
-        verify(view).setStoredContent("Saved body");
+        verify(localViewStub).setStoredContent("Saved body");
 
     }
 
-
-
     @Test(timeout = 500)
     public void testDeleteArticle(){
-        when(view.getSavesSelection()).thenReturn("Delete this");
+        when(localViewStub.getSavesSelection()).thenReturn("Delete this");
 
-       presenter.onEventDeleteArticle();
+       localPresenter.onEventDeleteArticle();
 
        verify (localModel).deleteArticle("Delete this");
-       verify(view).setStoredContent(any());//TODO no se invoca...
-       assert (view.getDisplayedArticle().equals("")); //TODO ¿por que dice que es nulo el retorno, si se supone que el presenter lo deja en "" ??
+       verify(localViewStub).setStoredContent(any());//TODO no se invoca...
+       assert (localViewStub.getDisplayedArticle().equals("")); //TODO ¿por que dice que es nulo el retorno, si se supone que el presenter lo deja en "" ??
 
         //TODO no es necesario verificar los carteles que lanza?
     }
 
     @Test(timeout = 500)
     public void testSaveArticleChanges(){
-        when(view.getSavesSelection()).thenReturn("Save this");
-        when(view.getDisplayedArticle()).thenReturn("Modified body");
+        when(localViewStub.getSavesSelection()).thenReturn("Save this");
+        when(localViewStub.getDisplayedArticle()).thenReturn("Modified body");
 
-        presenter.onEventSaveChanges();
+        localPresenter.onEventSaveChanges();
 
         verify(localModel).saveArticleChanges("Save this", "Modified body");//TODO Esto llama al listener y el listener a los 2 metodos de abajo(que nunca son llamados)
-        verify(view).setStoredList(any());
-        verify(view).displayMessage(any());
+        //verify(view).setStoredList(any());
+        verify(localViewStub).displayMessage(any());
 
     }
 
     @Test(timeout = 500)
     public void testSaveArticle(){
-        when(view.getSearchTitle()).thenReturn("Save this");
-        when(view.getSearchedContent()).thenReturn("Body to save");
+        when(searchViewStub.getSearchTitle()).thenReturn("Save this");
+        when(searchViewStub.getSearchedContent()).thenReturn("Body to save");
 
-        presenter.onEventSaveArticle();
+        searchPresenter.onEventSaveArticle();
 
         verify(localModel).saveArticle("Save this", "Body to save");
-        verify(view).setStoredContent(any());
-        verify(view).displayMessage(any());
-
-    }
-
-    @Test(timeout = 500)
-    public void loadSelectedArticleBody(){
-        SearchResult result = new SearchResult("Pizza","1", "Snippet");
-        when(view.getSearchSelection()).thenReturn(result);
-        //when() //TODO mockeo la database para obtener un resultado? O primero le guardo uno?
+        //verify(view).setStoredContent(any());
+        verify(searchViewStub).displayMessage(any());
 
     }
 
     @Test(timeout = 500)
     public void testChangeFullArticleMode(){
-        when(view.getOnlyIntro()).thenReturn(true);
+        when(searchViewStub.getOnlyIntro()).thenReturn(true);
 
 
-        presenter.onEventChooseOnlyIntro();
+        searchPresenter.onEventChooseOnlyIntro();
 
 
 
         verify(searchModel).setSearchMode(true);
-        verify(view).getOnlyIntro();
-        verifyNoInteractions(searcher); //TODO no se interactua con este mock, ??
-        //verify(searcher).toggleFullArticle(true);//TODO nunca lo llamaron, why?
+        verify(searchViewStub).getOnlyIntro();
+        verifyNoInteractions(searcher);
 
     }
+
+    @Test
+    public void testFailSearching(){
+
+    }
+
 
 }

@@ -2,22 +2,14 @@ package view;
 
 import model.SearchResult;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
-public interface MainWindow {
-    void showView();
+public interface SearchView {
 
     void setSearchedContent(String text);//Va al textPane1
 
     String getSearchedContent();
-
-    void setStoredContent(String text);//va al textPane2
-
-    void setStoredList(String[] storedArticles);//va al comboBox
-
-    String getSavesSelection();//retorna lo seleccionado por el combobox pasado a string
-
-    String getDisplayedArticle();
 
     String getSearchTitle();//Titulo de textField1
 
@@ -28,4 +20,6 @@ public interface MainWindow {
     boolean getOnlyIntro();//Retorna true si tiene que traer solo la intro
 
     void displayMessage(String errorMessage);
+
+    JPanel getPanel();
 }

@@ -1,5 +1,6 @@
 package model;
 
+import model.listeners.CatalogLocalModelListener;
 import model.listeners.CatalogWikiSearchModelListener;
 
 import java.io.IOException;
@@ -12,6 +13,12 @@ public class CatalogWikiSearchModelImpl implements CatalogWikiSearchModel{
     private String extract;
     private ArrayList<CatalogWikiSearchModelListener> listeners = new ArrayList<>();
     private String errorMessage = "";
+    private CatalogLocalModel localModel;
+
+    @Override
+    public void setSearchModel(CatalogLocalModel localModel){
+        this.localModel = localModel;
+    }
 
     @Override
     public void addListener(CatalogWikiSearchModelListener listener) {
@@ -67,6 +74,12 @@ public class CatalogWikiSearchModelImpl implements CatalogWikiSearchModel{
         return results;
     }
 
+    @Override
+    public boolean saveArticle(String title, String body) {
+        localModel.saveArticle(title, body);
+        return true;
+    }
+
     private void notifyError(){
         for(CatalogWikiSearchModelListener listener: listeners) {
             listener.didThrowException();
@@ -82,4 +95,5 @@ public class CatalogWikiSearchModelImpl implements CatalogWikiSearchModel{
             listener.didSearchOnWiki();
         }
     }
+
 }

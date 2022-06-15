@@ -25,4 +25,8 @@ public interface CatalogWikiSearchModel {
     boolean getSearchMode();
 
     ArrayList<SearchResult> getPreliminaryResults();
+
+    boolean saveArticle(String title, String body);
+
+    void setSearchModel(CatalogLocalModel localModel);
 }

@@ -7,4 +7,5 @@ public interface CatalogLocalModelListener {
 
     void didThrowException();//Cuando algo lanza una excepcion
 
+    void foundSave();
 }
