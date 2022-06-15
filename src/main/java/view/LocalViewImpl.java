@@ -6,11 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LocalViewImpl implements LocalView {
-    public JPanel storagePanel;
-    private JComboBox<Object> storedArticlesTitles;
-    private JTextPane storedArticleBody;
-    private JButton saveChangesButton;
-    private JButton deleteButton;
+    public JPanel storagePanel;//TODO hacerlo privado no deberia cambiar nada, lo obtengo con el setter
+    protected JComboBox<Object> storedArticlesTitles;
+    protected JTextPane storedArticleBody;
+    protected JButton saveChangesButton;
+    protected JButton deleteButton;
 
     private CatalogLocalPresenter localPresenter;
 
@@ -49,8 +49,8 @@ public class LocalViewImpl implements LocalView {
     }
 
     @Override
-    public void displayMessage(String errorMessage) {
-        JOptionPane.showMessageDialog(null, errorMessage);
+    public void displayMessage(String message) {
+        JOptionPane.showMessageDialog(null, message);
     }
 
     public void initListeners(){

@@ -18,5 +18,11 @@ public class LocalViewStub extends LocalViewImpl {
         searchOptions = preliminarResults;
     }
 
+    public void setSavesSelection(String title){
+        storedArticlesTitles.setSelectedItem(title);
+    }
 
+    public void displayMessage(String message){
+        System.out.println("Showed popup message: "+message);
+    }
 }

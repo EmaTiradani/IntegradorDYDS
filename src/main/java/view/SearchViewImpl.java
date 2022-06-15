@@ -52,7 +52,8 @@ public class SearchViewImpl implements SearchView{
                 catalogPresenter.onEventLoadArticle();
             });
         }
-        searchOptionsMenu.show(searchTitle, searchTitle.getX(), searchTitle.getY());
+        //searchOptionsMenu.show(searchTitle, searchTitle.getX(), searchTitle.getY()); TODO que onda con esto que no funca el getX
+        searchOptionsMenu.show(searchTitle, 50, 50);
     }
 
     @Override

@@ -57,7 +57,7 @@ public class CatalogLocalPresenterImpl implements CatalogLocalPresenter{
 
             @Override
             public void foundSave() {
-
+                //Esto es por si tengo que cambiar lo de onEventShowSaved()
             }
 
             @Override

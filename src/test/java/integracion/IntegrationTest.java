@@ -6,12 +6,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import presenter.*;
-import view.LocalView;
-
-import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -32,17 +30,21 @@ public class IntegrationTest {
         searchModel = new CatalogWikiSearchModelImpl();
         searcher = new WikiSearchStub();
         searchModel.setSearchEngine(searcher);
+
         searchPresenter = new CatalogSearchPresenterImpl(searchModel);
         localPresenter = new CatalogLocalPresenterImpl(localModel);
-        //presenter = new CatalogPresenterImpl(localModel, searchModel);
+
         searchViewStub = new SearchViewStub(searchPresenter);
-        //presenter.setView(view);
         localViewStub = new LocalViewStub(localPresenter);
 
         localPresenter.setView(localViewStub);
+        searchPresenter.setView(searchViewStub);
+
+        searchPresenter.start();
+        localPresenter.start();
     }
 
-    @Test(timeout = 500)
+    /*@Test(timeout = 500)
     public void testSearchAndShowPreliminaryResults() throws IOException {
         ArrayList<SearchResult> results = new ArrayList<>();
         SearchResult result1 = new SearchResult("First","1", "Snippet");
@@ -60,37 +62,57 @@ public class IntegrationTest {
             assertTrue(newResults.get(i).pageID.equals(results.get(i).pageID));
         }
 
-    }
+    }*/
 
     @Test(timeout = 500)
     public void testShowSavedArticle(){
-        when(localViewStub.getSavesSelection()).thenReturn("Title");
-        when(localModel.getSave("Title")).thenReturn("Saved body");
+        //TODO deberia guardar algo en el savesSelection y en la database tambien?
+        try {
+            DataBase.saveInfo("Pizza", "Pizzabody");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        localViewStub.setSavesSelection("Pizza");
 
         localPresenter.onEventShowSaved();
-
-        verify(localModel).getSave("Title");
-        verify(localViewStub).setStoredContent("Saved body");
-
+        String expectedBody = DataBase.getExtract("Pizza");
+        assertEquals("Pizzabody"/*expectedBody*/, localViewStub.getDisplayedArticle());//TODO como? Con el string o con lo de la DB?
     }
 
-    @Test(timeout = 500)
+    @Test(timeout = 5000)
     public void testDeleteArticle(){
-        when(localViewStub.getSavesSelection()).thenReturn("Delete this");
+        //TODO me tira un error cuando lo ejecuto a veces, el combobox esta vacio al parecer
 
-       localPresenter.onEventDeleteArticle();
+        try {
+            DataBase.saveInfo("This has to be deleted", "Body");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        localViewStub.setStoredList(localModel.getStoredTitles());
+        localViewStub.setSavesSelection("This has to be deleted");
 
-       verify (localModel).deleteArticle("Delete this");
-       verify(localViewStub).setStoredContent(any());//TODO no se invoca...
-       assert (localViewStub.getDisplayedArticle().equals("")); //TODO ¿por que dice que es nulo el retorno, si se supone que el presenter lo deja en "" ??
+        ArrayList<String> titlesBeforeDeleting = DataBase.getTitles();
 
-        //TODO no es necesario verificar los carteles que lanza?
+        localPresenter.onEventDeleteArticle();
+
+        assertEquals(DataBase.getTitles().size(), titlesBeforeDeleting.size()-1);
+        assertNotEquals(DataBase.getTitles(), titlesBeforeDeleting);
+
+        //TODO no es necesario verificar los carteles que lanza? Yo lo deje en un print
     }
 
     @Test(timeout = 500)
     public void testSaveArticleChanges(){
-        when(localViewStub.getSavesSelection()).thenReturn("Save this");
-        when(localViewStub.getDisplayedArticle()).thenReturn("Modified body");
+
+        try {
+            DataBase.saveInfo("Save changes to this article", "Not modified body");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        localViewStub.setStoredList(localModel.getStoredTitles());
+        localViewStub.setSavesSelection("Save changes to this");
+        localViewStub.setStoredContent();
 
         localPresenter.onEventSaveChanges();
 

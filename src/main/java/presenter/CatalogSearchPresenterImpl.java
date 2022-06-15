@@ -18,8 +18,6 @@ public class CatalogSearchPresenterImpl implements CatalogSearchPresenter{
     }
 
     public void start() {
-        //this.view.setStoredList(localModel.getStoredTitles());
-        //view.showView();
     }
 
     public void setView(SearchView view){
