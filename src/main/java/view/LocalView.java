@@ -14,7 +14,7 @@ public interface LocalView {
 
     String getDisplayedArticle();
 
-    void setStoredList(String[] storedArticles);//va al comboBox
+    void setStoredList(String[] storedArticles);
 
     void displayMessage(String errorMessage);
 

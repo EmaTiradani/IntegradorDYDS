@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LocalViewImpl implements LocalView {
-    public JPanel storagePanel;//TODO hacerlo privado no deberia cambiar nada, lo obtengo con el setter
+    protected JPanel storagePanel;
     protected JComboBox<Object> storedArticlesTitles;
     protected JTextPane storedArticleBody;
     protected JButton saveChangesButton;

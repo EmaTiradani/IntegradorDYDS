@@ -6,19 +6,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import presenter.*;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IntegrationTest {
 
     CatalogSearchPresenter searchPresenter;
     CatalogLocalPresenter localPresenter;
-    WikiSearch searcher;
+    WikipediaSearch searcher;
     CatalogWikiSearchModel searchModel;
     CatalogLocalModel localModel;
     SearchViewStub searchViewStub;
@@ -30,12 +29,18 @@ public class IntegrationTest {
         searchModel = new CatalogWikiSearchModelImpl();
         searcher = new WikiSearchStub();
         searchModel.setSearchEngine(searcher);
+        searchModel.setLocalModel(localModel);
 
         searchPresenter = new CatalogSearchPresenterImpl(searchModel);
         localPresenter = new CatalogLocalPresenterImpl(localModel);
 
         searchViewStub = new SearchViewStub(searchPresenter);
         localViewStub = new LocalViewStub(localPresenter);
+
+        ArrayList<String> titles = DataBase.getTitles();
+        for(String title : titles){
+            DataBase.deleteEntry(title);
+        }
 
         localPresenter.setView(localViewStub);
         searchPresenter.setView(searchViewStub);
@@ -44,7 +49,7 @@ public class IntegrationTest {
         localPresenter.start();
     }
 
-    /*@Test(timeout = 500)
+    @Test(timeout = 500)
     public void testSearchAndShowPreliminaryResults() throws IOException {
         ArrayList<SearchResult> results = new ArrayList<>();
         SearchResult result1 = new SearchResult("First","1", "Snippet");
@@ -55,33 +60,31 @@ public class IntegrationTest {
         results.add(result3);
         searchViewStub.setSearchTitle("Pizza");
         searchPresenter.onEventSearch();
-        ArrayList<SearchResult> newResults = localViewStub.searchOptions;
+        ArrayList<SearchResult> newResults = searchViewStub.preliminaryResults;
         for(int i = 0; i<3; i++){
             assertTrue(newResults.get(i).pageID.equals(results.get(i).pageID));
             assertTrue(newResults.get(i).pageID.equals(results.get(i).pageID));
             assertTrue(newResults.get(i).pageID.equals(results.get(i).pageID));
         }
-
-    }*/
+    }
 
     @Test(timeout = 500)
     public void testShowSavedArticle(){
-        //TODO deberia guardar algo en el savesSelection y en la database tambien?
         try {
             DataBase.saveInfo("Pizza", "Pizzabody");
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        localViewStub.setSavesSelection("Pizza");
 
+        localViewStub.setStoredList(new String[]{"Pizza"});
+        localViewStub.setSavesSelection("Pizza");
         localPresenter.onEventShowSaved();
-        String expectedBody = DataBase.getExtract("Pizza");
-        assertEquals("Pizzabody"/*expectedBody*/, localViewStub.getDisplayedArticle());//TODO como? Con el string o con lo de la DB?
+
+        assertEquals("Pizzabody", localViewStub.getDisplayedArticle());
     }
 
     @Test(timeout = 5000)
     public void testDeleteArticle(){
-        //TODO me tira un error cuando lo ejecuto a veces, el combobox esta vacio al parecer
 
         try {
             DataBase.saveInfo("This has to be deleted", "Body");
@@ -117,7 +120,6 @@ public class IntegrationTest {
         localPresenter.onEventSaveChanges();
 
         assertEquals("Changed body", DataBase.getExtract("Save changes to this article"));
-        //TODO esta bien o deberia seleccionar "Save hanges to this article" en el combobox y tiene que quedar igual el body?
     }
 
     @Test(timeout = 500)
@@ -128,23 +130,31 @@ public class IntegrationTest {
 
         searchPresenter.onEventSaveArticle();
 
-        assertEquals("Body to save", DataBase.getExtract("Save this"));
+        assert(DataBase.getExtract("Save this").contains("Body to save"));
 
     }
 
     @Test(timeout = 500)
     public void testChangeFullArticleMode(){
-        when(searchViewStub.getOnlyIntro()).thenReturn(true);
 
-
+        searchViewStub.setSearchMode(false);
+        boolean initialValue = searchViewStub.getOnlyIntro();
+        searchViewStub.setSearchTitle("Pizza");
         searchPresenter.onEventChooseOnlyIntro();
+        searchPresenter.onEventLoadArticle();
+        String notFullArticleBody = searchViewStub.getSearchedContent();
 
+        searchViewStub.setSearchMode(true);
+        boolean afterChangeValue = searchViewStub.getOnlyIntro();
+        assertNotEquals(initialValue, afterChangeValue);
+        searchViewStub.setSearchTitle("Test full article");
+        searchPresenter.onEventChooseOnlyIntro();
+        searchPresenter.onEventLoadArticle();
+        String fullArticleBody = searchViewStub.getSearchedContent();
 
-
-        verify(searchModel).setSearchMode(true);
-        verify(searchViewStub).getOnlyIntro();
-        verifyNoInteractions(searcher);
-
+        assertNotEquals(notFullArticleBody, fullArticleBody);
+        assert(notFullArticleBody.contains("Only intro"));
+        assert(fullArticleBody.contains("Full article"));
     }
 
     @Test

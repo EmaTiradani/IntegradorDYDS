@@ -14,19 +14,15 @@ public interface CatalogWikiSearchModel {
 
     void searchOnWiki(String title);
 
-    //String searchExtract(SearchResult searchResult);
-
-    void setSearchEngine(WikiSearch searcher);
+    void setSearchEngine(WikipediaSearch searcher);
 
     String searchExtract(SearchResult searchResult);
 
     void setSearchMode(boolean onlyIntro);
 
-    boolean getSearchMode();
-
     ArrayList<SearchResult> getPreliminaryResults();
 
     boolean saveArticle(String title, String body);
 
-    void setSearchModel(CatalogLocalModel localModel);
+    void setLocalModel(CatalogLocalModel localModel);
 }

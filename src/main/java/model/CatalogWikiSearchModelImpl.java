@@ -1,6 +1,5 @@
 package model;
 
-import model.listeners.CatalogLocalModelListener;
 import model.listeners.CatalogWikiSearchModelListener;
 
 import java.io.IOException;
@@ -8,7 +7,7 @@ import java.util.ArrayList;
 
 public class CatalogWikiSearchModelImpl implements CatalogWikiSearchModel{
 
-    WikiSearch searcher = new WikiSearch();
+    WikiSearch searcher = new WikipediaSearch();
     ArrayList<SearchResult> results = new ArrayList<>();
     private String extract;
     private ArrayList<CatalogWikiSearchModelListener> listeners = new ArrayList<>();
@@ -16,7 +15,7 @@ public class CatalogWikiSearchModelImpl implements CatalogWikiSearchModel{
     private CatalogLocalModel localModel;
 
     @Override
-    public void setSearchModel(CatalogLocalModel localModel){
+    public void setLocalModel(CatalogLocalModel localModel){
         this.localModel = localModel;
     }
 
@@ -43,7 +42,7 @@ public class CatalogWikiSearchModelImpl implements CatalogWikiSearchModel{
     }
 
     @Override
-    public void setSearchEngine(WikiSearch searcher) {
+    public void setSearchEngine(WikipediaSearch searcher) {
         this.searcher = searcher;
     }
 
@@ -62,11 +61,6 @@ public class CatalogWikiSearchModelImpl implements CatalogWikiSearchModel{
     @Override
     public void setSearchMode(boolean onlyIntro) {
         searcher.toggleFullArticle(onlyIntro);
-    }
-
-    @Override
-    public boolean getSearchMode() {
-        return searcher.getArticleMode();
     }
 
     @Override

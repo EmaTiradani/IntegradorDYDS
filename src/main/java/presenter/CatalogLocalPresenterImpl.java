@@ -3,7 +3,6 @@ package presenter;
 import model.CatalogLocalModel;
 import model.listeners.CatalogLocalModelListener;
 import view.LocalView;
-import view.SearchView;
 
 public class CatalogLocalPresenterImpl implements CatalogLocalPresenter{
 
@@ -53,11 +52,6 @@ public class CatalogLocalPresenterImpl implements CatalogLocalPresenter{
             @Override
             public void didThrowException() {
                 view.displayMessage(localModel.getErrorMessage());
-            }
-
-            @Override
-            public void foundSave() {
-                //Esto es por si tengo que cambiar lo de onEventShowSaved()
             }
 
             @Override

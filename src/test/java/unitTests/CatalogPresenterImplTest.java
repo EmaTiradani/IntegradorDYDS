@@ -27,12 +27,11 @@ public class CatalogPresenterImplTest {
 
     @Mock
     SearchViewImpl searchView;
-
     @Mock
     LocalViewImpl localView;
 
     @Mock
-    WikiSearch searcher;
+    WikipediaSearch searcher;
 
     @Before
     public void setUp() throws Exception{

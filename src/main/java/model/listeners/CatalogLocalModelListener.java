@@ -1,11 +1,10 @@
 package model.listeners;
 
 public interface CatalogLocalModelListener {
-    void didSaveLocally();//tocar el boton de guardar localmente
+    void didSaveLocally();
 
     void didDeleteSave();
 
-    void didThrowException();//Cuando algo lanza una excepcion
+    void didThrowException();
 
-    void foundSave();
 }

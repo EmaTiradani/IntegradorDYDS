@@ -13,7 +13,7 @@ public class Main {
         CatalogLocalModel localModel = new CatalogLocalModelImpl();
         CatalogWikiSearchModel searchModel = new CatalogWikiSearchModelImpl();
 
-        searchModel.setSearchModel(localModel);
+        searchModel.setLocalModel(localModel);
 
         CatalogLocalPresenter localPresenter = new CatalogLocalPresenterImpl(localModel);
         LocalView localView = new LocalViewImpl(localPresenter);

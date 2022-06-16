@@ -7,7 +7,8 @@ import view.SearchViewImpl;
 import java.util.ArrayList;
 
 public class SearchViewStub extends SearchViewImpl {
-//Combobox con set selected ya se dispara un evento
+
+    public ArrayList<SearchResult> preliminaryResults;
 
     public SearchViewStub(CatalogSearchPresenter catalogPresenter) {
         super(catalogPresenter);
@@ -17,8 +18,13 @@ public class SearchViewStub extends SearchViewImpl {
         searchTitle.setText(title);
     }
 
+    public void displaySearchOptions(ArrayList<SearchResult> preliminaryResults){
+        this.preliminaryResults = preliminaryResults;
+    }
 
-
+    public void setSearchMode(boolean fullArticle){
+        onlyIntroCheckBox.setSelected(fullArticle);
+    }
 
 
 

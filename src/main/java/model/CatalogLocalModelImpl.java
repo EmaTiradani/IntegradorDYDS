@@ -11,7 +11,6 @@ public class CatalogLocalModelImpl implements CatalogLocalModel{
     private ArrayList<CatalogLocalModelListener> listeners = new ArrayList<>();
     private String message = "";
 
-
     @Override
     public String getMessage() {
         return message;
@@ -79,12 +78,6 @@ public class CatalogLocalModelImpl implements CatalogLocalModel{
     private void notifyDeleteListener(){
         for(CatalogLocalModelListener listener: listeners){
             listener.didDeleteSave();
-        }
-    }
-
-    private void notifyFoundSave(){
-        for(CatalogLocalModelListener listener: listeners){
-            listener.foundSave();
         }
     }
 

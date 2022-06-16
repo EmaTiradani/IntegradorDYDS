@@ -7,19 +7,19 @@ import java.util.ArrayList;
 
 public interface SearchView {
 
-    void setSearchedContent(String text);//Va al textPane1
+    void setSearchedContent(String text);
 
     String getSearchedContent();
 
-    String getSearchTitle();//Titulo de textField1
+    String getSearchTitle();
 
-    void displaySearchOptions(ArrayList<SearchResult> preliminarResults);//Le mandas titulos para que cree el JPopupMenu
+    void displaySearchOptions(ArrayList<SearchResult> preliminarResults);
 
     SearchResult getSearchSelection();
 
-    boolean getOnlyIntro();//Retorna true si tiene que traer solo la intro
+    boolean getOnlyIntro();
 
-    void displayMessage(String errorMessage);
+    void displayMessage(String message);
 
     JPanel getPanel();
 }

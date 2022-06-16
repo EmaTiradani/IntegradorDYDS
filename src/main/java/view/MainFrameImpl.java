@@ -22,7 +22,6 @@ public class MainFrameImpl implements MainFrame {
     @Override
     public void setLocalPanel(JPanel localPanel) {
         tabs.add(localPanel, "Saved articles", 0);
-
     }
 
     @Override
